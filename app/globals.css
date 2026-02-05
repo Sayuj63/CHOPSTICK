@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: #D4A017;
+  --color-secondary: #8B0000;
+  --color-accent: #2C1810;
+  --color-cream: #FFF8F0;
+  
+  --font-display: var(--font-playfair);
+  --font-body: var(--font-inter);
+}
+
+body {
+  @apply bg-cream text-accent font-body;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-display;
+}
