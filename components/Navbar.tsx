@@ -39,14 +39,14 @@ export default function Navbar() {
 
     return (
         <nav
-            className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-accent/95 backdrop-blur-md shadow-lg py-1" : "bg-accent/80 backdrop-blur-sm py-[11px]"
+            className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white shadow-lg py-2" : "bg-white py-4"
                 }`}
         >
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center transition-all duration-300">
                 {/* Logo */}
-                <Link href="/" className="relative h-12 w-28 sm:h-16 sm:w-40 md:h-20 md:w-48 flex items-center transition-transform duration-300 hover:scale-105">
+                <Link href="/" className="relative h-20 w-40 sm:h-24 sm:w-48 md:h-32 md:w-64 flex items-center transition-transform duration-300 hover:scale-105">
                     <Image
-                        src="/chopsticklogo.png"
+                        src="/chopsticklog.png"
                         alt="Chopsticks Spice Malbar"
                         fill
                         priority
@@ -60,8 +60,7 @@ export default function Navbar() {
                         <Link
                             key={link.name}
                             href={link.href}
-                            className={`text-xs lg:text-sm tracking-widest uppercase font-medium transition-colors hover:text-primary ${scrolled ? "text-cream" : "text-white"
-                                }`}
+                            className="text-xs lg:text-sm tracking-widest uppercase font-medium transition-colors text-gray-800 hover:text-primary"
                         >
                             {link.name}
                         </Link>
@@ -69,7 +68,7 @@ export default function Navbar() {
 
                     <button
                         onClick={toggleCart}
-                        className={`relative p-2 hover:text-primary transition-colors ${scrolled ? "text-cream" : "text-white"}`}
+                        className="relative p-2 hover:text-primary transition-colors text-gray-800"
                         aria-label="Open shopping cart"
                     >
                         <FaShoppingCart className="text-xl" />
@@ -85,7 +84,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-2 sm:gap-4 md:hidden">
                     <button
                         onClick={toggleCart}
-                        className={`relative p-2 ${scrolled ? "text-cream" : "text-white"}`}
+                        className="relative p-2 text-gray-800"
                         aria-label="Open shopping cart"
                     >
                         <FaShoppingCart className="text-xl" />
@@ -97,7 +96,7 @@ export default function Navbar() {
                     </button>
 
                     <button
-                        className={`p-2 text-2xl transition-colors ${scrolled ? "text-cream" : "text-white"} hover:text-primary`}
+                        className="p-2 text-2xl transition-colors text-gray-800 hover:text-primary"
                         onClick={() => setIsOpen(!isOpen)}
                         aria-label={isOpen ? "Close menu" : "Open menu"}
                     >
@@ -113,8 +112,17 @@ export default function Navbar() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 top-0 left-0 w-full h-screen bg-accent z-40 md:hidden flex flex-col pt-24 pb-12 transition-colors duration-300"
+                        className="fixed inset-0 top-0 left-0 w-full h-screen bg-white z-40 md:hidden flex flex-col pt-24 pb-12 transition-colors duration-300"
                     >
+                        {/* Close button */}
+                        <button
+                            onClick={() => setIsOpen(false)}
+                            className="absolute top-6 right-6 p-2 text-gray-800 hover:text-primary transition-colors"
+                            aria-label="Close menu"
+                        >
+                            <FaTimes className="text-3xl" />
+                        </button>
+
                         <div className="container mx-auto px-6 flex flex-col h-full">
                             <motion.div
                                 initial={{ y: 20, opacity: 0 }}
@@ -131,7 +139,7 @@ export default function Navbar() {
                                     >
                                         <Link
                                             href={link.href}
-                                            className="text-cream text-3xl sm:text-4xl font-display font-bold hover:text-primary transition-colors inline-block"
+                                            className="text-gray-800 text-3xl sm:text-4xl font-display font-bold hover:text-primary transition-colors inline-block"
                                             onClick={() => setIsOpen(false)}
                                         >
                                             {link.name}
@@ -146,21 +154,21 @@ export default function Navbar() {
                                 transition={{ delay: 0.8 }}
                                 className="mt-auto space-y-8"
                             >
-                                <div className="h-px w-full bg-white/10" />
+                                <div className="h-px w-full bg-gray-200" />
 
                                 <div className="flex justify-between items-center">
                                     <div className="space-y-1">
                                         <p className="text-primary text-xs uppercase tracking-[0.2em] font-bold">Contact Us</p>
-                                        <p className="text-cream/60 text-sm">+91 98765 43210</p>
+                                        <p className="text-gray-600 text-sm">+91 98765 43210</p>
                                     </div>
                                     <div className="flex gap-4">
-                                        <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-cream hover:bg-primary hover:border-primary transition-all">
+                                        <a href="#" className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-800 hover:bg-primary hover:border-primary hover:text-white transition-all">
                                             <FaFacebookF />
                                         </a>
-                                        <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-cream hover:bg-primary hover:border-primary transition-all">
+                                        <a href="#" className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-800 hover:bg-primary hover:border-primary hover:text-white transition-all">
                                             <FaInstagram />
                                         </a>
-                                        <a href="#" className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-cream hover:bg-primary hover:border-primary transition-all">
+                                        <a href="#" className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-800 hover:bg-primary hover:border-primary hover:text-white transition-all">
                                             <FaTwitter />
                                         </a>
                                     </div>

@@ -41,14 +41,14 @@ export default function Hero() {
     const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
     return (
-        <section ref={ref} id="hero" className="relative h-screen w-full overflow-hidden flex items-center justify-center">
+        <section ref={ref} id="hero" className="relative h-screen w-full overflow-hidden flex items-center justify-center pt-32 md:pt-40">
             {/* Background Parallax */}
             <motion.div
                 style={{ y, opacity }}
                 className="absolute inset-0 z-0"
             >
                 <div
-                    className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2670&auto=format&fit=crop')] bg-cover bg-center"
+                    className="absolute inset-0 bg-[url('/images/IMG_20240310_205654352.jpg')] bg-cover bg-center"
                 />
                 {/* Overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-accent" />

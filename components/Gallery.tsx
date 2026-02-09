@@ -6,18 +6,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaTimes } from "react-icons/fa";
 
 const galleryImages = [
-    { id: 1, category: "Food", src: "https://images.unsplash.com/photo-1559314809-0d155014e29e?q=80&w=2670" },
-    { id: 2, category: "Ambience", src: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2670" },
-    { id: 3, category: "Food", src: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?q=80&w=2670" },
-    { id: 4, category: "Events", src: "https://images.unsplash.com/photo-1530103862676-de3c9a59af57?q=80&w=2670" },
-    { id: 5, category: "Food", src: "https://images.unsplash.com/photo-1603133872878-684f208fb65b?q=80&w=2574" },
-    { id: 6, category: "Ambience", src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=2574" },
-    { id: 7, category: "Food", src: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?q=80&w=2500" },
-    { id: 8, category: "Food", src: "https://images.unsplash.com/photo-1626777552726-4a653719028d?q=80&w=2600" },
-    { id: 9, category: "Ambience", src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2670" },
-    { id: 10, category: "Events", src: "https://images.unsplash.com/photo-1519225469958-305e68780cf9?q=80&w=2670" },
-    { id: 11, category: "Food", src: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?q=80&w=2670" },
-    { id: 12, category: "Ambience", src: "https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?q=80&w=2670" }
+    { id: 1, category: "Food", src: "/images/IMG_20240310_134802992_HDR.jpg" },
+    { id: 2, category: "Food", src: "/images/IMG_20240310_134810465_HDR.jpg" },
+    { id: 3, category: "Food", src: "/images/IMG_20240310_134834415_HDR.jpg" },
+    { id: 4, category: "Food", src: "/images/IMG_20240310_135859376.jpg" },
+    { id: 5, category: "Food", src: "/images/IMG_20240310_141322313_HDR.jpg" },
+    { id: 6, category: "Food", src: "/images/IMG_20240310_141324653_HDR.jpg" },
+    { id: 7, category: "Food", src: "/images/IMG_20240310_142903998_HDR.jpg" },
+    { id: 8, category: "Food", src: "/images/IMG_20240310_142912910_HDR.jpg" },
+    { id: 9, category: "Food", src: "/images/IMG_20240310_205612326.jpg" },
+    { id: 10, category: "Food", src: "/images/IMG_20240310_205630276.jpg" },
+    { id: 11, category: "Food", src: "/images/IMG_20240310_205718582.jpg" },
+    { id: 12, category: "Food", src: "/images/IMG_20240310_205825741.jpg" },
+    { id: 13, category: "Food", src: "/images/IMG_20240310_205939416.jpg" },
+    { id: 14, category: "Food", src: "/images/IMG-20240310-WA0003.jpg" }
 ];
 
 export default function Gallery() {

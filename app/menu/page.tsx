@@ -15,7 +15,7 @@ export default function MenuPage() {
             <Navbar />
             <CartSidebar />
 
-            <div className="pt-[62px] sm:pt-[78px]">
+            <div className="pt-32 sm:pt-36 md:pt-40">
                 <CategoryCircles selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
             </div>
 
