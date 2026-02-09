@@ -33,15 +33,15 @@ const specialties = [
 
 export default function Specialties() {
     return (
-        <section id="specialties" className="py-20 md:py-32 bg-white">
-            <div className="container mx-auto px-4 md:px-6">
-                <div className="text-center max-w-3xl mx-auto mb-16">
-                    <h3 className="text-secondary uppercase tracking-[0.2em] font-bold text-sm mb-3">Our Signature Dishes</h3>
-                    <h2 className="text-4xl md:text-5xl font-display font-bold text-accent mb-6">Chef's Recommendations</h2>
-                    <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+        <section id="specialties" className="py-16 sm:py-24 md:py-32 bg-white">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+                    <h3 className="text-secondary uppercase tracking-[0.2em] font-bold text-xs sm:text-sm mb-3">Our Signature Dishes</h3>
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-accent mb-6">Chef's Recommendations</h2>
+                    <div className="w-16 sm:w-24 h-1 bg-primary mx-auto rounded-full"></div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
                     {specialties.map((item, index) => (
                         <motion.div
                             key={index}
@@ -49,27 +49,27 @@ export default function Specialties() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
                             transition={{ delay: index * 0.1, duration: 0.5 }}
-                            className="group bg-cream rounded-sm overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300"
+                            className="group bg-cream rounded-sm overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col h-full"
                         >
-                            <div className="relative h-64 w-full overflow-hidden">
+                            <div className="relative h-56 sm:h-64 w-full overflow-hidden">
                                 <Image
                                     src={item.image}
                                     alt={item.name}
                                     fill
-                                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                    className="object-cover transition-transform duration-700 group-hover:scale-110"
                                 />
-                                <div className="absolute top-4 right-4 bg-primary text-accent font-bold py-1 px-3 rounded-sm shadow-md">
+                                <div className="absolute top-4 right-4 bg-primary text-accent font-bold py-1 px-3 rounded-sm shadow-md text-sm">
                                     {item.price}
                                 </div>
                             </div>
-                            <div className="p-6">
-                                <h3 className="text-xl font-display font-bold text-accent mb-2 group-hover:text-secondary transition-colors">
+                            <div className="p-5 sm:p-6 flex flex-col flex-grow">
+                                <h3 className="text-lg sm:text-xl font-display font-bold text-accent mb-2 group-hover:text-secondary transition-colors line-clamp-1">
                                     {item.name}
                                 </h3>
-                                <p className="text-gray-600 font-light text-sm line-clamp-3">
+                                <p className="text-gray-600 font-light text-sm line-clamp-2 sm:line-clamp-3 mb-4 flex-grow">
                                     {item.description}
                                 </p>
-                                <button className="mt-4 text-xs font-bold uppercase tracking-wider text-secondary border-b border-transparent group-hover:border-secondary transition-colors">
+                                <button className="self-start text-[10px] sm:text-xs font-bold uppercase tracking-widest text-secondary border-b-2 border-transparent hover:border-secondary transition-all pb-1">
                                     Order Now
                                 </button>
                             </div>
@@ -77,8 +77,8 @@ export default function Specialties() {
                     ))}
                 </div>
 
-                <div className="mt-12 text-center">
-                    <Link href="/menu" className="px-10 py-4 border-2 border-accent text-accent font-bold uppercase tracking-wider hover:bg-accent hover:text-cream transition-colors duration-300 rounded-sm inline-block">
+                <div className="mt-12 sm:mt-16 text-center">
+                    <Link href="/menu" className="w-full sm:w-auto px-10 py-4 border-2 border-accent text-accent font-bold uppercase tracking-wider hover:bg-accent hover:text-cream transition-colors duration-300 rounded-sm inline-block text-sm sm:text-base">
                         View Full Menu
                     </Link>
                 </div>
