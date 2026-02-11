@@ -5,38 +5,156 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus, FaLeaf } from "react-icons/fa";
 import { useCart } from "@/context/CartContext";
 
-const products = [
-    // Veg Starters
-    { id: "vs1", category: "starters-veg", name: "Paneer Tikka", price: 320, image: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?q=80&w=2600", veg: true },
-    { id: "vs2", category: "starters-veg", name: "Gobi Manchurian", price: 240, image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2670", veg: true },
-    { id: "vs3", category: "starters-veg", name: "Crispy Corn", price: 220, image: "https://images.unsplash.com/photo-1585032226651-759b368d7246?q=80&w=2670", veg: true },
+import menuData from "@/public/Menu.json";
 
-    // Non-Veg Starters
-    { id: "nvs1", category: "starters-nonveg", name: "Chicken 65", price: 280, image: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?q=80&w=2574", veg: false },
-    { id: "nvs2", category: "starters-nonveg", name: "Prawns Fry", price: 450, image: "https://images.unsplash.com/photo-1559314809-0d155014e29e?q=80&w=2670", veg: false },
+const categoryImages: Record<string, string> = {
+    "chinese": "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=2672",
+    "kerala": "https://images.unsplash.com/photo-1596797038558-9da39b968efe?q=80&w=2574",
+    "indian": "https://images.unsplash.com/photo-1585937421612-70a008356fbe?q=80&w=2672",
+    "tandoori": "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?q=80&w=2500",
+    "starters": "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?q=80&w=2574",
+    "main-course": "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=2670",
+    "rice-breads": "https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=2670",
+    "default": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2670"
+};
 
-    // Chinese
-    { id: "ch1", category: "chinese", name: "Chicken Fried Rice", price: 280, image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=2672", veg: false },
-    { id: "ch2", category: "chinese", name: "Hakka Noodles", price: 260, image: "https://images.unsplash.com/photo-1552611052-33e04de081de?q=80&w=2600", veg: true },
+const products: any[] = [];
+Object.entries(menuData.menu).forEach(([mainCategoryKey, subCategories]) => {
+    Object.entries(subCategories).forEach(([subCategoryKey, items]: [string, any]) => {
+        items.forEach((item: any) => {
+            const categories = ["all"];
 
-    // Main Course
-    { id: "mc1", category: "main-course", name: "Butter Chicken", price: 380, image: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=2670", veg: false },
-    { id: "mc2", category: "main-course", name: "Dal Makhani", price: 260, image: "https://images.unsplash.com/photo-1546833998-877b37c2e5b4?q=80&w=2670", veg: true },
+            // Map main categories
+            if (mainCategoryKey.includes("chinese")) categories.push("chinese");
+            if (mainCategoryKey.includes("kerala")) categories.push("kerala");
+            if (mainCategoryKey.includes("indian")) categories.push("indian");
+            if (mainCategoryKey === "tandoor") categories.push("tandoori");
 
-    // Tandoori
-    { id: "td1", category: "tandoori", name: "Tandoori Chicken", price: 450, image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?q=80&w=2500", veg: false },
+            // Map sub categories to types
+            if (subCategoryKey.includes("appetizer") || subCategoryKey === "starters" || subCategoryKey === "non_veg" || subCategoryKey === "vegetarian") {
+                categories.push("starters");
+            }
 
-    // Biryani
-    { id: "br1", category: "biryani", name: "Malabar Chicken Biryani", price: 320, image: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?q=80&w=2670", veg: false },
-    { id: "br2", category: "biryani", name: "Veg Biryani", price: 260, image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?q=80&w=2670", veg: true },
-];
+            if (subCategoryKey.includes("dishes") || subCategoryKey.includes("curries") || subCategoryKey === "main_course" || subCategoryKey === "thalis") {
+                categories.push("main-course");
+            }
 
-export default function MenuGrid({ selectedCategory }: { selectedCategory: string }) {
+            if (subCategoryKey.includes("rice") || subCategoryKey.includes("noodles") || subCategoryKey === "breads" || subCategoryKey === "paratha_rice") {
+                categories.push("rice-breads");
+            }
+
+            // Veg check
+            const isVeg = mainCategoryKey.includes("vegetarian") ||
+                (mainCategoryKey === "indian_main_course" && subCategoryKey === "vegetarian") ||
+                (mainCategoryKey === "tandoor" && (subCategoryKey === "vegetarian" || subCategoryKey === "breads")) ||
+                item.name.toLowerCase().includes("veg") ||
+                item.name.toLowerCase().includes("paneer") ||
+                item.name.toLowerCase().includes("dal") ||
+                item.name.toLowerCase().includes("mushroom") ||
+                item.name.toLowerCase().includes("gobi");
+
+            products.push({
+                id: item.id,
+                name: item.name,
+                price: item.price || item.price_full || item.price_half,
+                categories: categories,
+                veg: isVeg,
+                image: categoryImages[categories[1]] || categoryImages["default"]
+            });
+        });
+    });
+});
+
+// Levenshtein distance algorithm for fuzzy matching
+function levenshteinDistance(str1: string, str2: string): number {
+    const len1 = str1.length;
+    const len2 = str2.length;
+    const matrix: number[][] = [];
+
+    for (let i = 0; i <= len1; i++) {
+        matrix[i] = [i];
+    }
+
+    for (let j = 0; j <= len2; j++) {
+        matrix[0][j] = j;
+    }
+
+    for (let i = 1; i <= len1; i++) {
+        for (let j = 1; j <= len2; j++) {
+            const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
+            matrix[i][j] = Math.min(
+                matrix[i - 1][j] + 1,
+                matrix[i][j - 1] + 1,
+                matrix[i - 1][j - 1] + cost
+            );
+        }
+    }
+
+    return matrix[len1][len2];
+}
+
+// Calculate relevance score for search
+function calculateRelevance(itemName: string, searchQuery: string): number {
+    const itemLower = itemName.toLowerCase();
+    const queryLower = searchQuery.toLowerCase();
+
+    // Exact match gets highest score
+    if (itemLower === queryLower) return 1000;
+
+    // Starts with query gets high score
+    if (itemLower.startsWith(queryLower)) return 500;
+
+    // Contains query gets medium score
+    if (itemLower.includes(queryLower)) return 300;
+
+    // Use Levenshtein distance for fuzzy matching
+    const distance = levenshteinDistance(itemLower, queryLower);
+    const maxLength = Math.max(itemLower.length, queryLower.length);
+    const similarity = 1 - distance / maxLength;
+
+    // Only consider items with similarity > 0.4 (60% different or less)
+    if (similarity > 0.4) {
+        return similarity * 100;
+    }
+
+    // Check if any word in the item name matches
+    const itemWords = itemLower.split(/\s+/);
+    const queryWords = queryLower.split(/\s+/);
+
+    for (const queryWord of queryWords) {
+        for (const itemWord of itemWords) {
+            if (itemWord.startsWith(queryWord)) return 200;
+            if (itemWord.includes(queryWord)) return 150;
+
+            const wordDistance = levenshteinDistance(itemWord, queryWord);
+            const wordSimilarity = 1 - wordDistance / Math.max(itemWord.length, queryWord.length);
+            if (wordSimilarity > 0.6) {
+                return wordSimilarity * 100;
+            }
+        }
+    }
+
+    return 0;
+}
+
+export default function MenuGrid({ selectedCategory, searchQuery = "" }: { selectedCategory: string; searchQuery?: string }) {
     const { addToCart } = useCart();
 
-    const filteredProducts = selectedCategory === "all"
+    let filteredProducts = selectedCategory === "all"
         ? products
-        : products.filter(p => p.category === selectedCategory);
+        : products.filter(p => p.categories.includes(selectedCategory));
+
+    // Apply search filter if search query exists
+    if (searchQuery.trim()) {
+        const productsWithRelevance = filteredProducts.map(product => ({
+            ...product,
+            relevance: calculateRelevance(product.name, searchQuery)
+        }));
+
+        filteredProducts = productsWithRelevance
+            .filter(p => p.relevance > 0)
+            .sort((a, b) => b.relevance - a.relevance);
+    }
 
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-6 md:gap-8 pb-24">

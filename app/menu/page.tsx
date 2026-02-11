@@ -6,9 +6,11 @@ import Footer from "@/components/Footer";
 import CategoryCircles from "@/components/menu/CategoryCircles";
 import MenuGrid from "@/components/menu/MenuGrid";
 import CartSidebar from "@/components/CartSidebar";
+import SearchBar from "@/components/menu/SearchBar";
 
 export default function MenuPage() {
     const [selectedCategory, setSelectedCategory] = useState("all");
+    const [searchQuery, setSearchQuery] = useState("");
 
     return (
         <main className="min-h-screen bg-cream">
@@ -16,11 +18,12 @@ export default function MenuPage() {
             <CartSidebar />
 
             <div className="pt-[62px] sm:pt-[78px]">
+                <SearchBar onSearchChange={setSearchQuery} searchQuery={searchQuery} />
                 <CategoryCircles selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
             </div>
 
             <div className="container mx-auto px-2 sm:px-6 lg:px-8 py-2 sm:py-6">
-                <MenuGrid selectedCategory={selectedCategory} />
+                <MenuGrid selectedCategory={selectedCategory} searchQuery={searchQuery} />
             </div>
 
             <Footer />

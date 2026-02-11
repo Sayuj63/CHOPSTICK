@@ -1,0 +1,338 @@
+{
+  "menu": {
+    "chinese_non_veg": {
+      "appetizers": [
+        { "id": "cnv_001", "name": "Drums of Heaven (Lolly pop)", "price": 250 },
+        { "id": "cnv_002", "name": "Lolly Pop Masala", "price": 270 },
+        { "id": "cnv_003", "name": "Chk. Spring Roll", "price": 270 },
+        { "id": "cnv_004", "name": "Chicken 65", "price": 270 },
+        { "id": "cnv_005", "name": "Golden Fried Prawns (8 pcs)", "price": 430 },
+        { "id": "cnv_006", "name": "Roasted Chicken (Chopstick's special)", "price_half": 290, "price_full": 580 },
+        { "id": "cnv_007", "name": "Chicken Barbeque", "price": 290 },
+        { "id": "cnv_008", "name": "Chicken Fried Wonton with Garlic Sauce", "price": 300 },
+        { "id": "cnv_009", "name": "Prawns Salt & Pepper", "price": 430 },
+        { "id": "cnv_010", "name": "Crispy Spring Chicken", "price": 280 },
+        { "id": "cnv_011", "name": "Chicken Red Pepper", "price": 280 },
+        { "id": "cnv_012", "name": "Prawns Sesame", "price": 430 },
+        { "id": "cnv_013", "name": "Grilled Prawns in Red Pepper Sauce", "price": 430 },
+        { "id": "cnv_014", "name": "Grilled Chicken in Red Pepper Sauce", "price": 290 },
+        { "id": "cnv_015", "name": "Pan-Fry Prawns", "price": 430 },
+        { "id": "cnv_016", "name": "Pan-Fry Chicken", "price": 300 },
+        { "id": "cnv_017", "name": "Chicken Satay", "price": 310 }
+      ],
+      "noodles": [
+        { "id": "cnv_n_01", "name": "Egg Hakka Noodles", "price": 210 },
+        { "id": "cnv_n_02", "name": "Chicken Hakka Noodles", "price": 250 },
+        { "id": "cnv_n_03", "name": "Chicken Szechwan Noodles", "price": 260 },
+        { "id": "cnv_n_04", "name": "Chicken Chilly Garlic Noodles", "price": 270 },
+        { "id": "cnv_n_05", "name": "Chicken Mushroom Noodles", "price": 270 },
+        { "id": "cnv_n_06", "name": "Chicken Hongkong Noodles", "price": 330 },
+        { "id": "cnv_n_07", "name": "Chicken Triple Noodles", "price": 330 },
+        { "id": "cnv_n_08", "name": "Prawns Peaking Noodles", "price": 430 },
+        { "id": "cnv_n_09", "name": "Prawns Noodles with Oyster Sauce", "price": 430 },
+        { "id": "cnv_n_10", "name": "Chicken Pan Fry Noodles", "price": 310 },
+        { "id": "cnv_n_11", "name": "Chicken Chopstick Special Noodles", "price": 340 },
+        { "id": "cnv_n_12", "name": "Chicken Chowmein", "price": 270 },
+        { "id": "cnv_n_13", "name": "Prawns Szechwan Noodles", "price": 460 }
+      ],
+      "chicken_dishes": [
+        { "id": "cnv_c_01", "name": "Chicken Manchurian", "price": 270 },
+        { "id": "cnv_c_02", "name": "Chicken Chilly", "price": 280 },
+        { "id": "cnv_c_03", "name": "Chicken Ball Hot Garlic", "price": 270 },
+        { "id": "cnv_c_04", "name": "Chicken Hong Kong", "price": 270 },
+        { "id": "cnv_c_05", "name": "Chicken Szechwan Sauce", "price": 270 },
+        { "id": "cnv_c_06", "name": "Ginger Chicken", "price": 270 },
+        { "id": "cnv_c_07", "name": "Chicken Cashewnut", "price": 280 },
+        { "id": "cnv_c_08", "name": "Chicken Oyster Sauce", "price": 280 },
+        { "id": "cnv_c_09", "name": "Shredded Chicken Red Chilly Sauce", "price": 290 },
+        { "id": "cnv_c_10", "name": "Diced Chicken in Garlic Sauce", "price": 280 },
+        { "id": "cnv_c_11", "name": "Chicken Mush. Bambooshoot (in hot Garlic)", "price": 290 },
+        { "id": "cnv_c_12", "name": "Sweet & Sour Chicken", "price": 280 },
+        { "id": "cnv_c_13", "name": "Diced Chicken with French Beans", "price": 280 },
+        { "id": "cnv_c_14", "name": "Shanghai Chicken", "price": 280 },
+        { "id": "cnv_c_15", "name": "Chk. Mushroom Babycorn in Oyster Sauce", "price": 310 },
+        { "id": "cnv_c_16", "name": "Chicken Supreme", "price": 280 },
+        { "id": "cnv_c_17", "name": "Chicken in Wine Sauce", "price": 320 },
+        { "id": "cnv_c_18", "name": "Chicken in Black Bean Sauce", "price": 300 },
+        { "id": "cnv_c_19", "name": "Chicken in Sweet Garlic Sauce", "price": 300 }
+      ],
+      "soups": [
+        { "id": "cnv_s_01", "name": "Sweet Corn Chicken Soup", "price": 140 },
+        { "id": "cnv_s_02", "name": "Hot & Sour Chicken Soup", "price": 140 },
+        { "id": "cnv_s_03", "name": "Chicken Manchow Soup", "price": 140 },
+        { "id": "cnv_s_04", "name": "Chicken Talumein Soup", "price": 140 },
+        { "id": "cnv_s_05", "name": "Chicken Lung Fung Soup", "price": 140 },
+        { "id": "cnv_s_06", "name": "Chicken Hakka Soup", "price": 140 },
+        { "id": "cnv_s_07", "name": "Chicken Chopstick Special Soup", "price": 150 },
+        { "id": "cnv_s_08", "name": "Chicken Meat Ball Soup", "price": 140 },
+        { "id": "cnv_s_09", "name": "Chicken Clear Soup", "price": 140 },
+        { "id": "cnv_s_10", "name": "Sea Food Soup", "price": 180 },
+        { "id": "cnv_s_11", "name": "Chicken Mushroom Soup", "price": 150 }
+      ],
+      "rice": [
+        { "id": "cnv_r_01", "name": "Egg Fried Rice", "price": 200 },
+        { "id": "cnv_r_02", "name": "Egg Szechwan Rice", "price": 210 },
+        { "id": "cnv_r_03", "name": "Chicken Fried Rice", "price": 240 },
+        { "id": "cnv_r_04", "name": "Chicken Szechwan Fried Rice", "price": 250 },
+        { "id": "cnv_r_05", "name": "Chicken Singapore Fried Rice", "price": 260 },
+        { "id": "cnv_r_06", "name": "Chicken Mushroom Fried Rice", "price": 260 },
+        { "id": "cnv_r_07", "name": "Prawns Fried Rice", "price": 430 },
+        { "id": "cnv_r_08", "name": "Mixed Fried Rice (Prawns/Mushroom/Chicken/Egg)", "price": 430 },
+        { "id": "cnv_r_09", "name": "Chicken Manchurian Rice", "price": 320 },
+        { "id": "cnv_r_10", "name": "Chicken Oyster Rice", "price": 320 },
+        { "id": "cnv_r_11", "name": "Chicken Triple Szechwan Rice", "price": 320 },
+        { "id": "cnv_r_12", "name": "Chicken Hongkong Rice", "price": 320 },
+        { "id": "cnv_r_13", "name": "Chicken Peaking Rice", "price": 330 },
+        { "id": "cnv_r_14", "name": "Mixed Peaking Rice", "price": 460 },
+        { "id": "cnv_r_15", "name": "Chicken Stew Rice", "price": 320 }
+      ],
+      "sea_food": [
+        { "id": "cnv_sf_01", "name": "Fish/Prawns Cashew nut", "price": 430 },
+        { "id": "cnv_sf_02", "name": "Fish/Prawns Garlic Sauce", "price": 430 },
+        { "id": "cnv_sf_03", "name": "Fish/Prawns Supreme Sauce", "price": 430 },
+        { "id": "cnv_sf_04", "name": "Fish/Prawns Ginger Sauce", "price": 430 },
+        { "id": "cnv_sf_05", "name": "Fish/Prawns Oyster Sauce", "price": 430 },
+        { "id": "cnv_sf_06", "name": "Fish Manchurian", "price": 430 },
+        { "id": "cnv_sf_07", "name": "Prawns Chilly", "price": 430 },
+        { "id": "cnv_sf_08", "name": "Fish Chilly", "price": 430 },
+        { "id": "cnv_sf_09", "name": "Prawns 65", "price": 430 },
+        { "id": "cnv_sf_10", "name": "Fish 65", "price": 430 },
+        { "id": "cnv_sf_11", "name": "Sweet & Sour Prawns", "price": 430 },
+        { "id": "cnv_sf_12", "name": "Prawns Broccoli Black Bean Sauce", "price": 430 },
+        { "id": "cnv_sf_13", "name": "Prawns Red Chilly Peaking Sauce", "price": 430 }
+      ],
+      "chopsuey": [
+        { "id": "cnv_cs_01", "name": "Chicken American Chopsuey", "price": 290 },
+        { "id": "cnv_cs_02", "name": "Prawns American Chopsuey", "price": 430 },
+        { "id": "cnv_cs_03", "name": "Chicken Chinese Chopsuey", "price": 290 },
+        { "id": "cnv_cs_04", "name": "Mix Chopsuey", "price": 430 },
+        { "id": "cnv_cs_05", "name": "Prawns Chinese Chopsuey", "price": 430 }
+      ]
+    },
+    "chinese_vegetarian": {
+      "appetizers": [
+        { "id": "cv_01", "name": "Veg. Spring Roll", "price": 240 },
+        { "id": "cv_02", "name": "Paneer Supreme", "price": 280 },
+        { "id": "cv_03", "name": "Mushroom in Oyster Sauce", "price": 260 },
+        { "id": "cv_04", "name": "Fired Mushroom in Garlic Sauce", "price": 260 },
+        { "id": "cv_05", "name": "Fired Babycorn", "price": 260 },
+        { "id": "cv_06", "name": "Fired Wonton's with Garlic Sauce", "price": 260 },
+        { "id": "cv_07", "name": "Paneer Barbeque", "price": 280 },
+        { "id": "cv_08", "name": "Crispy Veg", "price": 240 },
+        { "id": "cv_09", "name": "Veg 65", "price": 240 },
+        { "id": "cv_10", "name": "Crispy Chilly Potato", "price": 240 },
+        { "id": "cv_11", "name": "Gobi Manchurian", "price": 260 },
+        { "id": "cv_12", "name": "Gobi 65", "price": 250 },
+        { "id": "cv_13", "name": "Paneer 65", "price": 270 },
+        { "id": "cv_14", "name": "Mushroom 65", "price": 260 }
+      ],
+      "noodles": [
+        { "id": "cv_n_01", "name": "Hakka Noodle", "price": 210 },
+        { "id": "cv_n_02", "name": "Szechwan Noodles", "price": 220 },
+        { "id": "cv_n_03", "name": "Chilly Garlic Noodles", "price": 240 },
+        { "id": "cv_n_04", "name": "Mushroom Noodles", "price": 240 },
+        { "id": "cv_n_05", "name": "Peking Noodles", "price": 260 },
+        { "id": "cv_n_06", "name": "Chow Mein", "price": 220 },
+        { "id": "cv_n_07", "name": "Chopsticks Special Noodles", "price": 260 },
+        { "id": "cv_n_08", "name": "Pan Fry Noodles", "price": 250 },
+        { "id": "cv_n_09", "name": "Veg Triple Noodles", "price": 280 }
+      ],
+      "soups": [
+        { "id": "cv_s_01", "name": "Sweet Corn Soup", "price": 120 },
+        { "id": "cv_s_02", "name": "Hot & Sour Soup", "price": 120 },
+        { "id": "cv_s_03", "name": "Manchow Soup", "price": 120 },
+        { "id": "cv_s_04", "name": "Noodle Clear Soup", "price": 120 },
+        { "id": "cv_s_05", "name": "Talumein Soup", "price": 120 },
+        { "id": "cv_s_06", "name": "Babycorn Mushroom Soup", "price": 130 },
+        { "id": "cv_s_07", "name": "Chopsticks Special Veg. Soup", "price": 130 },
+        { "id": "cv_s_08", "name": "Veg. Hakka Soup", "price": 130 },
+        { "id": "cv_s_09", "name": "Veg. Tum Yum Soup", "price": 130 },
+        { "id": "cv_s_10", "name": "Mushroom Soup", "price": 130 }
+      ],
+      "veg_dishes": [
+        { "id": "cv_d_01", "name": "Veg. Manchurian", "price": 230 },
+        { "id": "cv_d_02", "name": "Combination Veg. Hot Garlic", "price": 220 },
+        { "id": "cv_d_03", "name": "Diced Mushroom Chilli", "price": 230 },
+        { "id": "cv_d_04", "name": "Paneer Chilly", "price": 270 },
+        { "id": "cv_d_05", "name": "Paneer Manchurian", "price": 270 },
+        { "id": "cv_d_06", "name": "Paneer Hot Garlic", "price": 270 },
+        { "id": "cv_d_07", "name": "Mushroom Manchurian Sauce", "price": 230 },
+        { "id": "cv_d_08", "name": "Cauliflower in Hot or Sweet Garlic Sauce", "price": 220 },
+        { "id": "cv_d_09", "name": "Veg. Ball Hot Garlic", "price": 220 },
+        { "id": "cv_d_10", "name": "Veg. Hongkong", "price": 220 },
+        { "id": "cv_d_11", "name": "Combination Veg. Hongkong Style", "price": 220 },
+        { "id": "cv_d_12", "name": "Paneer Hongkong", "price": 270 },
+        { "id": "cv_d_13", "name": "Cauliflower in Oyster Sauce", "price": 220 },
+        { "id": "cv_d_14", "name": "Veg. Mushroom Baby corn", "price": 240 }
+      ],
+      "rice": [
+        { "id": "cv_r_01", "name": "Veg. Fried Rice", "price": 200 },
+        { "id": "cv_r_02", "name": "Szechwan Fried Rice", "price": 210 },
+        { "id": "cv_r_03", "name": "Singapore Rice", "price": 220 },
+        { "id": "cv_r_04", "name": "Veg. Stew Rice", "price": 250 },
+        { "id": "cv_r_05", "name": "Manchurian Rice", "price": 260 },
+        { "id": "cv_r_06", "name": "Triple Szechwan Rice", "price": 270 },
+        { "id": "cv_r_07", "name": "Szechwan Rice & Noodle", "price": 230 },
+        { "id": "cv_r_08", "name": "Mushroom Fried Rice", "price": 220 }
+      ]
+    },
+    "kerala_non_veg": {
+      "starters": [
+        { "id": "knv_01", "name": "Poricha Kozhi", "price_half": 280, "price_full": 490 },
+        { "id": "knv_02", "name": "Chicken Leg Fry (1 Pc)", "price": 170 },
+        { "id": "knv_03", "name": "Chicken Leg Fry (2 Pc)", "price": 290 },
+        { "id": "knv_04", "name": "Drumstick Chicken Fry", "price": 320 },
+        { "id": "knv_05", "name": "Chicken 65", "price": 270 },
+        { "id": "knv_06", "name": "Chicken 65 (Boneless)", "price": 280 },
+        { "id": "knv_07", "name": "Chicken Pepper Fry (Boneless)", "price": 300 },
+        { "id": "knv_08", "name": "Kerala Chicken Fry", "price": 270 },
+        { "id": "knv_09", "name": "Kerala Chicken Fry (Boneless)", "price": 280 },
+        { "id": "knv_10", "name": "Mutton Dry Fry", "price": 450 },
+        { "id": "knv_11", "name": "Mutton Ularthiyathi", "price": 470 },
+        { "id": "knv_12", "name": "Prawns Dry Fry", "price": 430 },
+        { "id": "knv_13", "name": "Prawns Koliwada", "price": 430 },
+        { "id": "knv_14", "name": "Prawns Olattheyuthu", "price": 430 },
+        { "id": "knv_15", "name": "Bangda Fry", "price": 150 },
+        { "id": "knv_16", "name": "Surmai Fry", "price": 430 },
+        { "id": "knv_17", "name": "Pomfret Fry", "price": 440 },
+        { "id": "knv_18", "name": "Mathy Fry (2 Pcs)", "price": 130 },
+        { "id": "knv_19", "name": "Netholi Fry", "price": 260 },
+        { "id": "knv_20", "name": "Kilimeen Fry", "price": 220 }
+      ],
+      "thalis": [
+        { "id": "kt_01", "name": "Veg Thali", "price": 220 },
+        { "id": "kt_02", "name": "Chicken Thali", "price": 330 },
+        { "id": "kt_03", "name": "Mutton Thali", "price": 410 },
+        { "id": "kt_04", "name": "Fish Thali", "price": 380 },
+        { "id": "kt_05", "name": "Prawns Thali", "price": 380 },
+        { "id": "kt_06", "name": "Special Chicken Thali", "price": 430 },
+        { "id": "kt_07", "name": "Special Mutton Thali", "price": 530 },
+        { "id": "kt_08", "name": "Special Fish Thali", "price": 490 },
+        { "id": "kt_09", "name": "Special Prawns Thali", "price": 560 }
+      ],
+      "chicken_curries": [
+        { "id": "kc_01", "name": "Chicken Chettinad", "price": 290 },
+        { "id": "kc_02", "name": "Nadan Chicken Curry", "price": 290 },
+        { "id": "kc_03", "name": "Chicken Varutharachathu", "price": 300 },
+        { "id": "kc_04", "name": "Chicken Malabar", "price": 290 },
+        { "id": "kc_05", "name": "Chicken Stew", "price": 290 },
+        { "id": "kc_06", "name": "Chicken Mappas", "price": 290 },
+        { "id": "kc_07", "name": "Chicken Mulakittathu", "price": 290 },
+        { "id": "kc_08", "name": "Chicken Ghee Roast", "price": 320 },
+        { "id": "kc_09", "name": "Chicken Pepper Roast", "price": 290 },
+        { "id": "kc_10", "name": "Chicken Peralan", "price": 300 },
+        { "id": "kc_11", "name": "Chicken Ularthiyathu", "price": 300 },
+        { "id": "kc_12", "name": "Chicken Varattiyathu", "price": 300 },
+        { "id": "kc_13", "name": "Kuttanadan Chicken Curry", "price": 300 }
+      ],
+      "mutton_curries": [
+        { "id": "km_01", "name": "Mutton Chettinadu", "price": 430 },
+        { "id": "km_02", "name": "Mutton Malabar Curry", "price": 430 },
+        { "id": "km_03", "name": "Mutton Varutharachtu", "price": 430 },
+        { "id": "km_04", "name": "Mutton Mappas", "price": 430 },
+        { "id": "km_05", "name": "Mutton Stew", "price": 430 },
+        { "id": "km_06", "name": "Mutton Mulakittathu", "price": 430 },
+        { "id": "km_07", "name": "Mutton Ghee Roast", "price": 430 },
+        { "id": "km_08", "name": "Mutton Pepper Roast", "price": 430 },
+        { "id": "km_09", "name": "Mutton Ularthiyathu", "price": 430 },
+        { "id": "km_10", "name": "Kuttanadan Mutton Curry", "price": 430 }
+      ],
+      "sea_food_curries": [
+        { "id": "ksf_01", "name": "Kerala Fish Curry (2 pcs.)", "price": 430 },
+        { "id": "ksf_02", "name": "Alleppey Fish Curry", "price": 440 },
+        { "id": "ksf_03", "name": "Goan Fish Curry", "price": 430 },
+        { "id": "ksf_04", "name": "Chettinad Fish Curry", "price": 440 },
+        { "id": "ksf_05", "name": "Meen Poondu Kulambu", "price": 430 },
+        { "id": "ksf_06", "name": "Bangda Fish Curry", "price": 200 },
+        { "id": "ksf_07", "name": "Kerala Prawns Curry", "price": 430 },
+        { "id": "ksf_08", "name": "Prawns Goan Curry", "price": 430 },
+        { "id": "ksf_09", "name": "Fish Molee", "price": 430 },
+        { "id": "ksf_10", "name": "Fish Roast (2 pcs.)", "price": 430 },
+        { "id": "ksf_11", "name": "Fish Mappas", "price": 430 },
+        { "id": "ksf_12", "name": "Fish Vattichthu", "price": 430 },
+        { "id": "ksf_13", "name": "Fish Peera", "price": 430 },
+        { "id": "ksf_14", "name": "Fish Pollichathu", "price": 430 },
+        { "id": "ksf_15", "name": "Fish Malwani", "price": 430 },
+        { "id": "ksf_16", "name": "Fish Ghassi", "price": 430 },
+        { "id": "ksf_17", "name": "Prawns Roast", "price": 460 },
+        { "id": "ksf_18", "name": "Crab Roast", "price": 570 },
+        { "id": "ksf_19", "name": "Crab Curry", "price": 570 },
+        { "id": "ksf_20", "name": "Squid (65/Roast/Pan Fry)", "price": 410 }
+      ]
+    },
+    "kerala_vegetarian": {
+      "dishes": [
+        { "id": "kv_01", "name": "Veg. Mappas", "price": 200 },
+        { "id": "kv_02", "name": "Veg. Stew", "price": 200 },
+        { "id": "kv_03", "name": "Veg. Mulakittathu", "price": 200 },
+        { "id": "kv_04", "name": "Kadla Curry", "price": 210 },
+        { "id": "kv_05", "name": "Avial", "price": 120 },
+        { "id": "kv_06", "name": "Sambar", "price": 120 },
+        { "id": "kv_07", "name": "Rasam", "price": 110 },
+        { "id": "kv_08", "name": "Green Peas Curry", "price": 200 },
+        { "id": "kv_09", "name": "Moru Curry", "price": 140 }
+      ],
+      "chettinad_veg": [
+        { "id": "kcv_01", "name": "Chettinad Veg. Curry", "price": 210 },
+        { "id": "kcv_02", "name": "Chettinad Veg. Khurma", "price": 210 },
+        { "id": "kcv_03", "name": "Chettinad Mushroom Masala", "price": 230 },
+        { "id": "kcv_04", "name": "Chettinad Paneer Curry", "price": 240 },
+        { "id": "kcv_05", "name": "Ennai Kathrikkal", "price": 220 }
+      ],
+      "paratha_rice": [
+        { "id": "kp_01", "name": "Kerala Parotta", "price": 23 },
+        { "id": "kp_02", "name": "Appam", "price": 23 },
+        { "id": "kp_03", "name": "Idiappam", "price": 23 },
+        { "id": "kp_04", "name": "Puttu", "price": 80 },
+        { "id": "kp_05", "name": "Chapati", "price": 15 },
+        { "id": "kpr_01", "name": "Tomato Rice", "price": 160 },
+        { "id": "kpr_02", "name": "Coconut Rice", "price": 160 }
+      ]
+    },
+    "indian_main_course": {
+      "chicken": [
+        { "id": "imc_c_01", "name": "Chicken Masala", "price": 280 },
+        { "id": "imc_c_02", "name": "Chicken Kolhapuri", "price": 290 },
+        { "id": "imc_c_03", "name": "Chicken Curry", "price": 270 },
+        { "id": "imc_c_04", "name": "Chicken Kadai", "price": 300 },
+        { "id": "imc_c_05", "name": "Chicken Mughlai", "price": 300 },
+        { "id": "imc_c_06", "name": "Tangadi Masala", "price": 310 },
+        { "id": "imc_c_07", "name": "Chicken Tikka Masala", "price": 330 },
+        { "id": "imc_c_08", "name": "Butter Chicken", "price_half": 350, "price_full": 600 },
+        { "id": "imc_c_09", "name": "Chicken Handi", "price_half": 350, "price_full": 580 }
+      ],
+      "mutton": [
+        { "id": "imc_m_01", "name": "Mutton Sukka Masala", "price": 430 },
+        { "id": "imc_m_02", "name": "Mutton Rogan Josh", "price": 430 },
+        { "id": "imc_m_03", "name": "Mutton Handi", "price_half": 470, "price_full": 730 }
+      ],
+      "vegetarian": [
+        { "id": "imc_v_01", "name": "Paneer Butter Masala", "price": 270 },
+        { "id": "imc_v_02", "name": "Veg. Kolhapuri", "price": 240 },
+        { "id": "imc_v_03", "name": "Dal Tadka", "price": 210 },
+        { "id": "imc_v_04", "name": "Dal Makhani", "price": 220 }
+      ]
+    },
+    "tandoor": {
+      "non_veg": [
+        { "id": "t_nv_01", "name": "Tandoori Chicken", "price_half": 260, "price_full": 490 },
+        { "id": "t_nv_02", "name": "Peshawari Chicken", "price_half": 290, "price_full": 510 },
+        { "id": "t_nv_03", "name": "Chicken Tikka", "price": 330 },
+        { "id": "t_nv_04", "name": "Mutton Seekh Kabab", "price": 465 },
+        { "id": "t_nv_05", "name": "Fish Tikka", "price": 480 }
+      ],
+      "vegetarian": [
+        { "id": "t_v_01", "name": "Veg Seekh Kabab", "price": 230 },
+        { "id": "t_v_02", "name": "Paneer Tikka", "price": 270 },
+        { "id": "t_v_03", "name": "Harabhara Kabab", "price": 240 }
+      ],
+      "breads": [
+        { "id": "t_b_01", "name": "Plain Roti", "price": 24 },
+        { "id": "t_b_02", "name": "Butter Naan", "price": 35 },
+        { "id": "t_b_03", "name": "Cheese Naan", "price": 100 },
+        { "id": "t_b_04", "name": "Butter Garlic Naan", "price": 100 },
+        { "id": "t_b_05", "name": "Lachha Paratha", "price": 40 }
+      ]
+    }
+  }
+}
