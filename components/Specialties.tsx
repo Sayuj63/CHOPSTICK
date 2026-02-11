@@ -9,25 +9,25 @@ const specialties = [
         name: "Malabar Biryani",
         price: "₹380",
         description: "Aromatic kaima rice cooked with tender meat and authentic Malabar spices.",
-        image: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?q=80&w=2670&auto=format&fit=crop"
+        image: "/images/malabar_biryani.png"
     },
     {
         name: "Schezwan Fried Rice",
         price: "₹290",
         description: "Wok-tossed basmati rice with spicy schezwan sauce and fresh vegetables.",
-        image: "https://images.unsplash.com/photo-1603133872878-684f208fb65b?q=80&w=2574&auto=format&fit=crop"
+        image: "/images/schezwan_fried_rice.png"
     },
     {
         name: "Tandoori Platter",
         price: "₹550",
         description: "An assortment of chicken tikka, kebabs, and tandoori prawns grilled to perfection.",
-        image: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?q=80&w=2500&auto=format&fit=crop"
+        image: "/images/tandoori_platter.png"
     },
     {
         name: "Kerala Fish Curry",
         price: "₹420",
         description: "Fresh fish simmered in a tangy coconut milk gravy with kokum and curry leaves.",
-        image: "https://images.unsplash.com/photo-1626777552726-4a653719028d?q=80&w=2600&auto=format&fit=crop"
+        image: "/images/kerala_fish_curry.png"
     }
 ];
 
@@ -58,9 +58,7 @@ export default function Specialties() {
                                     fill
                                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                                 />
-                                <div className="absolute top-4 right-4 bg-primary text-accent font-bold py-1 px-3 rounded-sm shadow-md text-sm">
-                                    {item.price}
-                                </div>
+
                             </div>
                             <div className="p-5 sm:p-6 flex flex-col flex-grow">
                                 <h3 className="text-lg sm:text-xl font-display font-bold text-accent mb-2 group-hover:text-secondary transition-colors line-clamp-1">
@@ -69,9 +67,7 @@ export default function Specialties() {
                                 <p className="text-gray-600 font-light text-sm line-clamp-2 sm:line-clamp-3 mb-4 flex-grow">
                                     {item.description}
                                 </p>
-                                <button className="self-start text-[10px] sm:text-xs font-bold uppercase tracking-widest text-secondary border-b-2 border-transparent hover:border-secondary transition-all pb-1">
-                                    Order Now
-                                </button>
+
                             </div>
                         </motion.div>
                     ))}

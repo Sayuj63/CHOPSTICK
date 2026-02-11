@@ -11,7 +11,7 @@ export default function Footer() {
 
                     {/* Brand Info */}
                     <div className="space-y-6 text-center sm:text-left">
-                        <h2 className="text-2xl font-display font-bold text-primary">Chopsticks Spice Malbar</h2>
+                        <h2 className="text-2xl font-display font-bold text-primary">Chopsticks Spice Malabar</h2>
                         <p className="text-gray-400 font-light leading-relaxed text-sm max-w-xs mx-auto sm:mx-0">
                             A culinary journey through the authentic flavours of Malabar, China, and Tandoor. Serving happiness since 1999.
                         </p>
@@ -46,15 +46,15 @@ export default function Footer() {
                         <ul className="space-y-4 text-sm font-light text-gray-400">
                             <li className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
                                 <FaMapMarkerAlt className="text-primary mt-1 flex-shrink-0" />
-                                <span className="max-w-[200px]">Survey No. 123, Baner Road, Next to High Street, Pune, 411045</span>
+                                <span className="max-w-[200px]">Datta Mandir Chowk, Viman Nagar, Pune.</span>
                             </li>
                             <li className="flex flex-col sm:flex-row items-center gap-3">
                                 <FaPhone className="text-primary flex-shrink-0" />
-                                <span>+91 98765 43210</span>
+                                <span>9665065344 / 9890082699</span>
                             </li>
                             <li className="flex flex-col sm:flex-row items-center gap-3">
                                 <FaEnvelope className="text-primary flex-shrink-0" />
-                                <span className="truncate max-w-full">info@chopsticksspicemalbar.com</span>
+                                <span className="truncate max-w-full">chopsticksspicemalabar@gmail.com</span>
                             </li>
                         </ul>
                     </div>
@@ -64,7 +64,7 @@ export default function Footer() {
                         <h3 className="text-lg font-bold font-display text-white">Locate Us</h3>
                         <div className="w-full h-48 bg-gray-800 rounded-sm overflow-hidden shadow-2xl">
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.2613173278896!2d73.899066315364!3d18.5620929727407!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c147b8b3a3bf%3A0x6f7fdcc8e4aaf8a8!2sPhoenix%20Market%20City!5e0!3m2!1sen!2sin!4v1647844059000!5m2!1sen!2sin"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3782.0847469896707!2d73.91447807516857!3d18.57254826835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2c14df5e7e1c5%3A0x8e4e4e4e4e4e4e4e!2sDatta%20Mandir%20Chowk!5e0!3m2!1sen!2sin!4v1647844059000!5m2!1sen!2sin"
                                 width="100%"
                                 height="100%"
                                 style={{ border: 0 }}
@@ -78,7 +78,7 @@ export default function Footer() {
                 </div>
 
                 <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left text-[10px] sm:text-xs text-gray-500 font-light space-y-4 md:space-y-0">
-                    <p>&copy; {new Date().getFullYear()} Chopsticks Spice Malbar. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} Chopsticks Spice Malabar. All rights reserved.</p>
                     <div className="flex space-x-6">
                         <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
                         <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>

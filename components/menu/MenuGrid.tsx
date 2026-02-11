@@ -1,11 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus, FaLeaf } from "react-icons/fa";
 import { useCart } from "@/context/CartContext";
-
-import menuData from "@/public/Menu.json";
 
 const categoryImages: Record<string, string> = {
     "chinese": "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=2672",
@@ -18,52 +17,76 @@ const categoryImages: Record<string, string> = {
     "default": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2670"
 };
 
-const products: any[] = [];
-Object.entries(menuData.menu).forEach(([mainCategoryKey, subCategories]) => {
-    Object.entries(subCategories).forEach(([subCategoryKey, items]: [string, any]) => {
-        items.forEach((item: any) => {
-            const categories = ["all"];
+// Function to process menu data into products
+function processMenuData(menuData: any): any[] {
+    const products: any[] = [];
+    let itemIdCounter = 1;
 
-            // Map main categories
-            if (mainCategoryKey.includes("chinese")) categories.push("chinese");
-            if (mainCategoryKey.includes("kerala")) categories.push("kerala");
-            if (mainCategoryKey.includes("indian")) categories.push("indian");
-            if (mainCategoryKey === "tandoor") categories.push("tandoori");
+    // New menu structure is an array of categories
+    menuData.menu.forEach((categoryData: any) => {
+        const categoryName = categoryData.category.toLowerCase();
+        const categoryId = categoryData.category.toLowerCase().replace(/\s+/g, '-');
+        const cuisineType = categoryData.cuisine.toLowerCase();
+        const itemType = categoryData.type.toLowerCase();
 
-            // Map sub categories to types
-            if (subCategoryKey.includes("appetizer") || subCategoryKey === "starters" || subCategoryKey === "non_veg" || subCategoryKey === "vegetarian") {
+        categoryData.items.forEach((item: any) => {
+            const categories = ["all", categoryId]; // Add specific category ID
+
+            // Also add grouped categories for backwards compatibility
+            // Map cuisines to categories
+            if (cuisineType.includes("chinese")) categories.push("chinese");
+            if (cuisineType.includes("kerala")) categories.push("kerala");
+            if (cuisineType.includes("indian")) categories.push("indian");
+            if (cuisineType.includes("chettinad")) categories.push("indian");
+            if (cuisineType.includes("tandoor")) categories.push("tandoori");
+
+            // Map sections to types
+            if (categoryName.includes("appetizer") || categoryName.includes("starter")) {
                 categories.push("starters");
             }
 
-            if (subCategoryKey.includes("dishes") || subCategoryKey.includes("curries") || subCategoryKey === "main_course" || subCategoryKey === "thalis") {
+            if (categoryName.includes("main course") || categoryName.includes("curry") ||
+                categoryName.includes("curries") || categoryName.includes("dishes") ||
+                categoryName.includes("meals") || categoryName.includes("thali")) {
                 categories.push("main-course");
             }
 
-            if (subCategoryKey.includes("rice") || subCategoryKey.includes("noodles") || subCategoryKey === "breads" || subCategoryKey === "paratha_rice") {
+            if (categoryName.includes("rice") || categoryName.includes("noodles") ||
+                categoryName.includes("bread") || categoryName.includes("paratha") ||
+                categoryName.includes("biryani") || categoryName.includes("pulav") ||
+                categoryName.includes("chopsuey")) {
                 categories.push("rice-breads");
             }
 
             // Veg check
-            const isVeg = mainCategoryKey.includes("vegetarian") ||
-                (mainCategoryKey === "indian_main_course" && subCategoryKey === "vegetarian") ||
-                (mainCategoryKey === "tandoor" && (subCategoryKey === "vegetarian" || subCategoryKey === "breads")) ||
+            const isVeg = itemType.includes("vegetarian") ||
+                categoryName.includes("veg") ||
                 item.name.toLowerCase().includes("veg") ||
                 item.name.toLowerCase().includes("paneer") ||
                 item.name.toLowerCase().includes("dal") ||
                 item.name.toLowerCase().includes("mushroom") ||
-                item.name.toLowerCase().includes("gobi");
+                item.name.toLowerCase().includes("gobi") ||
+                item.name.toLowerCase().includes("aloo");
+
+            // Handle pricing - prefer full price, then regular price, then half price
+            const displayPrice = item.price || item.full || item.half || 0;
 
             products.push({
-                id: item.id,
+                id: `item_${itemIdCounter++}`,
                 name: item.name,
-                price: item.price || item.price_full || item.price_half,
+                price: displayPrice,
+                priceHalf: item.half,
+                priceFull: item.full,
                 categories: categories,
+                categoryName: categoryData.category, // Store full category name
                 veg: isVeg,
                 image: categoryImages[categories[1]] || categoryImages["default"]
             });
         });
     });
-});
+
+    return products;
+}
 
 // Levenshtein distance algorithm for fuzzy matching
 function levenshteinDistance(str1: string, str2: string): number {
@@ -139,21 +162,46 @@ function calculateRelevance(itemName: string, searchQuery: string): number {
 
 export default function MenuGrid({ selectedCategory, searchQuery = "" }: { selectedCategory: string; searchQuery?: string }) {
     const { addToCart } = useCart();
+    const [products, setProducts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Fetch menu data from public folder
+        fetch('/Menu.json')
+            .then(response => response.json())
+            .then(data => {
+                const processedProducts = processMenuData(data);
+                setProducts(processedProducts);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error loading menu:', error);
+                setLoading(false);
+            });
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center py-20">
+                <p className="text-accent text-lg">Loading menu...</p>
+            </div>
+        );
+    }
 
     let filteredProducts = selectedCategory === "all"
         ? products
-        : products.filter(p => p.categories.includes(selectedCategory));
+        : products.filter((p: any) => p.categories.includes(selectedCategory));
 
     // Apply search filter if search query exists
     if (searchQuery.trim()) {
-        const productsWithRelevance = filteredProducts.map(product => ({
+        const productsWithRelevance = filteredProducts.map((product: any) => ({
             ...product,
             relevance: calculateRelevance(product.name, searchQuery)
         }));
 
         filteredProducts = productsWithRelevance
-            .filter(p => p.relevance > 0)
-            .sort((a, b) => b.relevance - a.relevance);
+            .filter((p: any) => p.relevance > 0)
+            .sort((a: any, b: any) => b.relevance - a.relevance);
     }
 
     return (

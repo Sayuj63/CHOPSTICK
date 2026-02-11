@@ -71,7 +71,7 @@ export default function Hero() {
                             Est. 1999
                         </h2>
                         <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold font-display leading-[1.1] mb-6">
-                            25 Years of <br className="hidden sm:block" />
+                            <span className="text-primary">25 Years of</span> <br className="hidden sm:block" />
                             <span className="text-primary italic">Culinary Excellence</span>
                         </h1>
                     </motion.div>
@@ -92,12 +92,6 @@ export default function Hero() {
                             className="w-full xs:w-auto px-8 py-4 bg-primary text-accent text-sm sm:text-lg font-bold uppercase tracking-wider rounded-sm hover:bg-white transition-all duration-300 transform hover:-translate-y-1 shadow-lg shadow-black/30 text-center"
                         >
                             Order Online
-                        </Link>
-                        <Link
-                            href="#contact"
-                            className="w-full xs:w-auto px-8 py-4 bg-transparent border-2 border-primary text-primary text-sm sm:text-lg font-bold uppercase tracking-wider rounded-sm hover:bg-primary hover:text-accent transition-all duration-300 text-center"
-                        >
-                            Book A Table
                         </Link>
                     </motion.div>
 
@@ -122,7 +116,7 @@ export default function Hero() {
                         </div>
                         <div className="flex flex-col items-center col-span-2 md:col-span-1 mt-4 md:mt-0">
                             <span className="text-3xl sm:text-4xl md:text-5xl font-display text-primary font-bold">
-                                <Counter from={0} to={500} duration={2.5} />+
+                                <Counter from={0} to={400} duration={2.5} />+
                             </span>
                             <span className="text-[10px] sm:text-xs uppercase tracking-widest mt-2 text-gray-400">Unique Dishes</span>
                         </div>
