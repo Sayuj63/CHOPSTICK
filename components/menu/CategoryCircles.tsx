@@ -22,7 +22,7 @@ export default function CategoryCircles({
     onSelectCategory: (id: string) => void;
 }) {
     return (
-        <div className="py-2 sm:py-6 overflow-x-auto no-scrollbar bg-white border-b border-accent/5 sticky top-[130px] sm:top-[150px] z-20 shadow-sm">
+        <div className="py-2 sm:py-6 overflow-x-auto no-scrollbar bg-white border-b border-accent/5 sticky top-32 sm:top-36 md:top-40 z-30 shadow-sm">
             <div className="flex justify-start lg:justify-center items-start space-x-4 sm:space-x-8 px-4 sm:px-10 min-w-max mx-auto">
                 {categories.map((cat) => (
                     <motion.div
