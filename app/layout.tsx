@@ -13,6 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://chopstick-sepia.vercel.app'),
   title: "Chopsticks Spice Malabar | 25 Years of Culinary Excellence",
   description: "Experience the finest Malabar, Chinese, and Tandoori cuisine in Pune. 25 years of authentic flavors and tradition.",
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { FaFacebookF, FaInstagram, FaTwitter, FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 
 export default function Footer() {
@@ -11,7 +12,14 @@ export default function Footer() {
 
                     {/* Brand Info */}
                     <div className="space-y-6 text-center sm:text-left">
-                        <h2 className="text-2xl font-display font-bold text-primary">Chopsticks Spice Malabar</h2>
+                        <Link href="/" className="inline-block relative h-20 w-40 sm:h-24 sm:w-48 mx-auto sm:mx-0">
+                            <Image
+                                src="/chopsticklog.png"
+                                alt="Chopsticks Spice Malabar"
+                                fill
+                                className="object-contain"
+                            />
+                        </Link>
                         <p className="text-gray-400 font-light leading-relaxed text-sm max-w-xs mx-auto sm:mx-0">
                             A culinary journey through the authentic flavours of Malabar, China, and Tandoor. Serving happiness since 1999.
                         </p>
