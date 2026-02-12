@@ -18,7 +18,7 @@ export default function About() {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.8 }}
-                        className="w-full lg:w-1/2 relative min-h-[350px] sm:min-h-[450px] md:h-[600px] sticky top-32"
+                        className="w-full lg:w-1/2 relative min-h-[350px] sm:min-h-[450px] md:h-[600px] lg:sticky lg:top-32"
                     >
                         <div className="absolute inset-0 bg-accent/5 rounded-sm transform translate-x-4 translate-y-4" />
                         <div className="relative h-[350px] sm:h-[450px] md:h-full w-full rounded-sm overflow-hidden shadow-xl">
