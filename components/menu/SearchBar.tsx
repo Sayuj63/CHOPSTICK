@@ -7,9 +7,10 @@ import { FaSearch, FaTimes } from "react-icons/fa";
 interface SearchBarProps {
     onSearchChange: (query: string) => void;
     searchQuery: string;
+    resultsCount?: number;
 }
 
-export default function SearchBar({ onSearchChange, searchQuery }: SearchBarProps) {
+export default function SearchBar({ onSearchChange, searchQuery, resultsCount }: SearchBarProps) {
     const [isFocused, setIsFocused] = useState(false);
 
     const handleClear = () => {
@@ -37,8 +38,8 @@ export default function SearchBar({ onSearchChange, searchQuery }: SearchBarProp
                         onBlur={() => setIsFocused(false)}
                         placeholder="Search for dishes... (e.g., chicken, biryani, paneer)"
                         className={`w-full pl-12 pr-12 py-3 sm:py-4 text-sm sm:text-base rounded-lg border-2 transition-all duration-300 outline-none ${isFocused
-                                ? "border-primary shadow-lg shadow-primary/10"
-                                : "border-gray-200 hover:border-gray-300"
+                            ? "border-primary shadow-lg shadow-primary/10"
+                            : "border-gray-200 hover:border-gray-300"
                             } bg-white text-accent placeholder:text-gray-400`}
                     />
 
@@ -64,7 +65,7 @@ export default function SearchBar({ onSearchChange, searchQuery }: SearchBarProp
                         animate={{ opacity: 1 }}
                         className="text-xs sm:text-sm text-gray-500 mt-2 text-center"
                     >
-                        Searching for "{searchQuery}"...
+                        {resultsCount !== undefined ? `${resultsCount} result${resultsCount !== 1 ? 's' : ''} found for "${searchQuery}"` : `Searching for "${searchQuery}"...`}
                     </motion.p>
                 )}
             </div>

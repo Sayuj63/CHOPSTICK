@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaPlus, FaLeaf } from "react-icons/fa";
@@ -160,7 +160,11 @@ function calculateRelevance(itemName: string, searchQuery: string): number {
     return 0;
 }
 
-export default function MenuGrid({ selectedCategory, searchQuery = "" }: { selectedCategory: string; searchQuery?: string }) {
+export default function MenuGrid({ selectedCategory, searchQuery = "", onResultsChange }: {
+    selectedCategory: string;
+    searchQuery?: string;
+    onResultsChange?: (count: number) => void;
+}) {
     const { addToCart } = useCart();
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -180,6 +184,40 @@ export default function MenuGrid({ selectedCategory, searchQuery = "" }: { selec
             });
     }, []);
 
+    // Use useMemo for filtered products to fix hooks ordering
+    const filteredProducts = useMemo(() => {
+        let results: any[] = [];
+
+        // PRIORITY 1: Global Search (searches ALL products regardless of category)
+        if (searchQuery.trim()) {
+            const productsWithRelevance = products.map((product: any) => ({
+                ...product,
+                relevance: calculateRelevance(product.name, searchQuery)
+            }));
+
+            results = productsWithRelevance
+                .filter((p: any) => p.relevance > 0)
+                .sort((a: any, b: any) => b.relevance - a.relevance);
+        }
+        // PRIORITY 2: Category Filtering (only when NO search is active)
+        else {
+            results = selectedCategory === "all"
+                ? products
+                : products.filter((p: any) => p.categories.includes(selectedCategory));
+        }
+
+        return results;
+    }, [products, searchQuery, selectedCategory]);
+
+    // Notify parent component of results count when searching
+    useEffect(() => {
+        if (searchQuery.trim() && onResultsChange) {
+            onResultsChange(filteredProducts.length);
+        } else if (onResultsChange) {
+            onResultsChange(undefined as any);
+        }
+    }, [filteredProducts.length, searchQuery, onResultsChange]);
+
     if (loading) {
         return (
             <div className="flex justify-center items-center py-20">
@@ -188,21 +226,6 @@ export default function MenuGrid({ selectedCategory, searchQuery = "" }: { selec
         );
     }
 
-    let filteredProducts = selectedCategory === "all"
-        ? products
-        : products.filter((p: any) => p.categories.includes(selectedCategory));
-
-    // Apply search filter if search query exists
-    if (searchQuery.trim()) {
-        const productsWithRelevance = filteredProducts.map((product: any) => ({
-            ...product,
-            relevance: calculateRelevance(product.name, searchQuery)
-        }));
-
-        filteredProducts = productsWithRelevance
-            .filter((p: any) => p.relevance > 0)
-            .sort((a: any, b: any) => b.relevance - a.relevance);
-    }
 
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-6 md:gap-8 pb-24">

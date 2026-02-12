@@ -163,8 +163,8 @@ export default function CategoryCircles({
     }
 
     return (
-        <div className="py-2 sm:py-6 overflow-x-auto no-scrollbar bg-white border-b border-accent/5 sticky top-32 sm:top-36 md:top-40 z-30 shadow-sm">
-            <div className="flex justify-start items-start space-x-4 sm:space-x-6 px-4 sm:px-10 min-w-max">
+        <div className="py-2 sm:py-6 overflow-x-auto md:overflow-x-auto no-scrollbar bg-white border-b border-accent/5 sticky top-32 sm:top-36 md:top-40 z-30 shadow-sm category-container">
+            <div className="category-grid flex justify-start items-start space-x-4 sm:space-x-6 px-4 sm:px-10 min-w-max md:min-w-max">
                 {categories.map((cat) => (
                     <motion.div
                         key={cat.id}
@@ -188,7 +188,7 @@ export default function CategoryCircles({
                                 {cat.count}
                             </div>
                         </div>
-                        <span className={`text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-center w-14 sm:w-20 leading-tight transition-colors duration-300 line-clamp-2 ${selectedCategory === cat.id ? "text-primary" : "text-gray-500 group-hover:text-accent"
+                        <span className={`category-label text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-center leading-tight transition-colors duration-300 ${selectedCategory === cat.id ? "text-primary" : "text-gray-500 group-hover:text-accent"
                             }`}>
                             {cat.name}
                         </span>
