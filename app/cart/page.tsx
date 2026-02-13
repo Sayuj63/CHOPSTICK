@@ -110,7 +110,17 @@ export default function CartPage() {
         return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
     };
 
-    const isFormValid = name && phone && flatNo && area && distance && !locationError && cart.length > 0;
+    const isValidPhone = (p: string) => {
+        const cleaned = p.replace(/\D/g, '');
+        return cleaned.length === 10;
+    };
+
+    const isValidEmail = (e: string) => {
+        if (!e) return true; // Email is optional
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    };
+
+    const isFormValid = name && isValidPhone(phone) && isValidEmail(email) && flatNo && area && distance && !locationError && cart.length > 0;
 
     return (
         <main className="min-h-screen bg-cream flex flex-col">
@@ -318,6 +328,8 @@ export default function CartPage() {
                                             e.preventDefault();
                                             if (!name) alert("Please enter your name.");
                                             else if (!phone) alert("Please enter your phone number.");
+                                            else if (!isValidPhone(phone)) alert("Please enter a valid 10-digit phone number.");
+                                            else if (!isValidEmail(email)) alert("Please enter a valid email address.");
                                             else if (!flatNo) alert("Please enter your Flat / House number.");
                                             else if (!area) alert("Please enter your Area / Locality.");
                                             else if (!distance) alert("Please locate your delivery address to calculate charges.");
