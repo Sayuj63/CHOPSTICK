@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaPlus, FaLeaf } from "react-icons/fa";
+import { FaPlus, FaMinus, FaLeaf } from "react-icons/fa";
 import { useCart } from "@/context/CartContext";
 
 const categoryImages: Record<string, string> = {
@@ -165,7 +165,7 @@ export default function MenuGrid({ selectedCategory, searchQuery = "", onResults
     searchQuery?: string;
     onResultsChange?: (count: number) => void;
 }) {
-    const { addToCart } = useCart();
+    const { addToCart, cart, updateQuantity } = useCart();
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -262,14 +262,43 @@ export default function MenuGrid({ selectedCategory, searchQuery = "", onResults
 
                             <div className="mt-auto flex justify-between items-center sm:pt-4 sm:border-t sm:border-gray-50">
                                 <span className="font-extrabold text-[12px] sm:text-lg md:text-xl text-accent">₹{product.price}</span>
-                                <motion.button
-                                    whileTap={{ scale: 0.9 }}
-                                    onClick={() => addToCart({ id: product.id, name: product.name, price: product.price, image: product.image })}
-                                    className="p-1 sm:px-4 sm:py-2 bg-primary/10 text-primary border border-primary/20 font-bold uppercase text-[9px] sm:text-xs rounded-full sm:rounded-sm hover:bg-primary hover:text-accent hover:border-primary transition-all duration-300 flex items-center justify-center"
-                                >
-                                    <span className="sm:hidden flex items-center justify-center w-5 h-5"><FaPlus size={10} /></span>
-                                    <span className="hidden sm:inline flex items-center gap-1"><FaPlus size={8} /> ADD</span>
-                                </motion.button>
+                                {(() => {
+                                    const cartItem = cart.find(item => item.id === product.id);
+                                    const quantity = cartItem ? cartItem.quantity : 0;
+
+                                    if (quantity === 0) {
+                                        return (
+                                            <motion.button
+                                                whileTap={{ scale: 0.9 }}
+                                                onClick={() => addToCart({ id: product.id, name: product.name, price: product.price, image: product.image })}
+                                                className="p-1 sm:px-4 sm:py-2 bg-white text-primary border border-gray-200 font-bold uppercase text-[9px] sm:text-xs rounded-lg shadow-sm hover:shadow-md hover:border-primary transition-all duration-300 flex items-center justify-center min-w-[70px] sm:min-w-[90px]"
+                                            >
+                                                <span className="sm:hidden flex items-center justify-center"><FaPlus size={10} className="mr-1" /> ADD</span>
+                                                <span className="hidden sm:inline flex items-center gap-1">ADD</span>
+                                            </motion.button>
+                                        );
+                                    } else {
+                                        return (
+                                            <div className="flex items-center bg-primary text-secondary rounded-lg overflow-hidden shadow-md h-7 sm:h-9 min-w-[70px] sm:min-w-[90px]">
+                                                <motion.button
+                                                    whileTap={{ scale: 0.9 }}
+                                                    onClick={() => updateQuantity(product.id, quantity - 1)}
+                                                    className="w-7 sm:w-9 h-full flex items-center justify-center bg-primary hover:bg-opacity-90 transition-colors"
+                                                >
+                                                    <FaMinus size={8} />
+                                                </motion.button>
+                                                <span className="flex-1 text-center font-bold text-[10px] sm:text-xs bg-primary text-menu-text">{quantity}</span>
+                                                <motion.button
+                                                    whileTap={{ scale: 0.9 }}
+                                                    onClick={() => updateQuantity(product.id, quantity + 1)}
+                                                    className="w-7 sm:w-9 h-full flex items-center justify-center bg-primary hover:bg-opacity-90 transition-colors"
+                                                >
+                                                    <FaPlus size={8} />
+                                                </motion.button>
+                                            </div>
+                                        );
+                                    }
+                                })()}
                             </div>
                         </div>
                     </motion.div>

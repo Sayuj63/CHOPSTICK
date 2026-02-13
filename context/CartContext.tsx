@@ -20,6 +20,8 @@ type CartContextType = {
     cartCount: number;
     isCartOpen: boolean;
     toggleCart: () => void;
+    notification: string | null;
+    clearNotification: () => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -27,6 +29,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
     const [cart, setCart] = useState<CartItem[]>([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
+    const [notification, setNotification] = useState<string | null>(null);
 
     // Load cart from local storage on mount
     useEffect(() => {
@@ -55,7 +58,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
             }
             return [...prev, { ...item, quantity: 1 }];
         });
-        setIsCartOpen(true);
+        // Remove setIsCartOpen(true) to prevents cart sidebar from opening automatically
+        // setIsCartOpen(true); 
+        setNotification(`Added ${item.name} to cart`);
     };
 
     const removeFromCart = (id: string) => {
@@ -80,6 +85,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setIsCartOpen((prev) => !prev);
     }
 
+    const clearNotification = () => {
+        setNotification(null);
+    };
+
     const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
     const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
@@ -95,6 +104,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
                 cartCount,
                 isCartOpen,
                 toggleCart,
+                notification,
+                clearNotification,
             }}
         >
             {children}
