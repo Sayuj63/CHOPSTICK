@@ -1,0 +1,292 @@
+
+"use client";
+
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useCart } from "@/context/CartContext";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { FaTrash, FaPlus, FaMinus, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
+import { calculateDeliveryCharge, calculateDistance } from "@/utils/deliveryUtils";
+
+// Pune coordinates based on Footer location
+const RESTAURANT_COORDS = { lat: 18.572548, lng: 73.914478 };
+const WHATSAPP_NUMBER = "919607507443";
+
+export default function CartPage() {
+    const { cart, removeFromCart, updateQuantity, cartTotal } = useCart();
+
+    // User Details
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
+
+    // Location & Delivery
+    const [distance, setDistance] = useState<string>("");
+    const [isLocating, setIsLocating] = useState(false);
+    const [locationError, setLocationError] = useState("");
+    const [deliveryCharge, setDeliveryCharge] = useState(0);
+
+    useEffect(() => {
+        const dist = parseFloat(distance);
+        if (!isNaN(dist)) {
+            const charge = calculateDeliveryCharge(dist, cartTotal);
+            setDeliveryCharge(charge === -1 ? 0 : charge); // Handle out of range gracefully in UI
+        } else {
+            setDeliveryCharge(0);
+        }
+    }, [distance, cartTotal]);
+
+    const handleLocateMe = () => {
+        setIsLocating(true);
+        setLocationError("");
+
+        if (!navigator.geolocation) {
+            setLocationError("Geolocation is not supported by your browser.");
+            setIsLocating(false);
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+                const distKm = calculateDistance(RESTAURANT_COORDS.lat, RESTAURANT_COORDS.lng, userLat, userLng);
+
+                // Adding a small buffer (1.2x) to account for road curvature vs straight line
+                const roadDistanceEst = (distKm * 1.2).toFixed(1);
+
+                setDistance(roadDistanceEst);
+                setIsLocating(false);
+            },
+            (error) => {
+                console.error("Error fetching location:", error);
+                let errorMessage = "Unable to retrieve location.";
+                if (error.code === error.PERMISSION_DENIED) {
+                    errorMessage = "Location permission denied. Please enable it in browser settings.";
+                } else if (error.code === error.TIMEOUT) {
+                    errorMessage = "Location request timed out.";
+                }
+                setLocationError(errorMessage);
+                setIsLocating(false);
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+    };
+
+    const generateWhatsAppLink = () => {
+        let message = `*New Order from ${name}*\n`;
+        message += `Phone: ${phone}\n`;
+        message += `Email: ${email}\n\n`;
+        message += `*Order Details:*\n`;
+
+        cart.forEach((item) => {
+            message += `- ${item.name} x ${item.quantity} = ₹${item.price * item.quantity}\n`;
+        });
+
+        message += `\n*Subtotal: ₹${cartTotal}*`;
+        message += `\n*Delivery Charge (${distance || 0} km): ₹${deliveryCharge}*`;
+        const total = cartTotal + deliveryCharge;
+        message += `\n*Total Amount: ₹${total}*`;
+
+
+
+        message += `\n\nPlease confirm my order.`;
+
+        const encodedMessage = encodeURIComponent(message);
+        return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+    };
+
+    const isFormValid = name && phone && distance && !locationError && cart.length > 0;
+
+    return (
+        <main className="min-h-screen bg-cream flex flex-col">
+            <Navbar />
+
+            <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-40 pb-24 sm:py-32">
+                <h1 className="text-3xl md:text-4xl font-display font-bold text-accent mb-8 text-center">Your Cart</h1>
+
+                {cart.length === 0 ? (
+                    <div className="text-center space-y-6 bg-white p-8 rounded-2xl shadow-sm max-w-lg mx-auto">
+                        <p className="text-gray-500 text-lg">Your cart is empty.</p>
+                        <Link href="/menu" className="inline-block px-8 py-3 bg-primary text-accent font-bold uppercase tracking-widest rounded-sm hover:bg-accent hover:text-white transition-all shadow-md">
+                            Browse Menu
+                        </Link>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                        {/* Cart Items */}
+                        <div className="space-y-6">
+                            <div className="bg-white rounded-2xl shadow-sm overflow-hidden p-6 space-y-6">
+                                <h2 className="text-xl font-bold text-accent border-b pb-4">Items</h2>
+                                {cart.map((item) => (
+                                    <div key={item.id} className="flex gap-4 items-center border-b border-gray-100 pb-6 last:pb-0 last:border-0">
+                                        <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                                            <Image
+                                                src={item.image}
+                                                alt={item.name}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                        <div className="flex-1 flex flex-col justify-between h-24 py-1">
+                                            <div className="flex justify-between items-start gap-2">
+                                                <h3 className="font-bold text-accent text-lg line-clamp-1">{item.name}</h3>
+                                                <button
+                                                    onClick={() => removeFromCart(item.id)}
+                                                    className="text-gray-300 hover:text-red-500 transition-colors p-1"
+                                                    aria-label={`Remove ${item.name}`}
+                                                >
+                                                    <FaTrash size={14} />
+                                                </button>
+                                            </div>
+
+                                            <div className="flex justify-between items-center mt-auto">
+                                                <p className="text-primary font-bold text-md">₹{item.price}</p>
+
+                                                <div className="flex items-center gap-3 bg-gray-50 rounded-full px-3 py-1 border border-gray-200">
+                                                    <button
+                                                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                        className="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-accent transition-colors"
+                                                        aria-label="Decrease quantity"
+                                                    >
+                                                        <FaMinus size={10} />
+                                                    </button>
+                                                    <span className="font-bold text-accent w-6 text-center">{item.quantity}</span>
+                                                    <button
+                                                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                        className="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-accent transition-colors"
+                                                        aria-label="Increase quantity"
+                                                    >
+                                                        <FaPlus size={10} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Checkout Section */}
+                        <div className="space-y-6">
+                            <div className="bg-white rounded-2xl shadow-sm p-6 space-y-6">
+                                <h2 className="text-xl font-bold text-accent border-b pb-4">Delivery Details</h2>
+
+                                <div className="space-y-4">
+                                    <div>
+                                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                            placeholder="Your Name"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                                        <input
+                                            type="tel"
+                                            id="phone"
+                                            value={phone}
+                                            onChange={(e) => setPhone(e.target.value)}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                            placeholder="Your Phone Number"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email <span className="text-gray-400 font-normal">(Optional)</span></label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                            placeholder="Your Email"
+                                        />
+                                    </div>
+
+                                    {/* Location */}
+                                    <div className="pt-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Location</label>
+                                        <div className="flex gap-2 items-center">
+                                            <button
+                                                onClick={handleLocateMe}
+                                                disabled={isLocating}
+                                                className="flex-1 bg-blue-50 text-blue-600 px-4 py-3 rounded-lg font-bold hover:bg-blue-100 transition-colors flex items-center justify-center gap-2 border border-blue-200"
+                                            >
+                                                {isLocating ? (
+                                                    <span className="animate-spin w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full"></span>
+                                                ) : (
+                                                    <FaMapMarkerAlt />
+                                                )}
+                                                {isLocating ? "Locating..." : (distance ? `Location Found (${distance} km)` : "Locate Me")}
+                                            </button>
+                                        </div>
+                                        {locationError && (
+                                            <p className="text-xs text-red-500 mt-2">{locationError}</p>
+                                        )}
+                                        {distance && !locationError && (
+                                            <p className="text-xs text-green-600 mt-2 font-medium">
+                                                {deliveryCharge === 0 ? "Free Delivery! 🎉" : `Distance: ${distance} km`}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Order Summary */}
+                            <div className="bg-white rounded-2xl shadow-sm p-6 space-y-4">
+                                <h2 className="text-xl font-bold text-accent border-b pb-4">Order Summary</h2>
+
+                                <div className="space-y-2 text-sm text-gray-600">
+                                    <div className="flex justify-between">
+                                        <span>Subtotal</span>
+                                        <span>₹{cartTotal}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <span>Delivery Charges</span>
+                                        <span>{distance ? `₹${deliveryCharge}` : '--'}</span>
+                                    </div>
+                                </div>
+                                <div className="flex justify-between items-center text-xl font-bold text-accent pt-4 border-t border-gray-100">
+                                    <span>Total</span>
+                                    <span>₹{cartTotal + deliveryCharge}</span>
+                                </div>
+
+                                <a
+                                    href={isFormValid ? generateWhatsAppLink() : undefined}
+                                    target={isFormValid ? "_blank" : undefined}
+                                    rel="noreferrer"
+                                    onClick={(e) => {
+                                        if (!isFormValid) {
+                                            e.preventDefault();
+                                            if (!name) alert("Please enter your name.");
+                                            else if (!phone) alert("Please enter your phone number.");
+                                            else if (!distance) alert("Please locate your delivery address.");
+                                        }
+                                    }}
+                                    className={`block w-full text-center font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 mt-4 text-white uppercase tracking-wider
+                                        ${isFormValid
+                                            ? 'bg-[#25D366] hover:bg-[#128C7E] cursor-pointer transform hover:-translate-y-1'
+                                            : 'bg-gray-300 cursor-not-allowed'}`}
+                                >
+                                    <FaWhatsapp className="text-xl" />
+                                    Place Order on WhatsApp
+                                </a>
+                                <p className="text-center text-xs text-gray-400">
+                                    You'll be redirected to WhatsApp to confirm your order.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            <Footer />
+        </main>
+    );
+}

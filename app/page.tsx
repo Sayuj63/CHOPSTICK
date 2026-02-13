@@ -6,13 +6,13 @@ import Gallery from "@/components/Gallery";
 import Features from "@/components/Features";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
-import CartSidebar from "@/components/CartSidebar";
+
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-cream text-accent">
       <Navbar />
-      <CartSidebar />
+
       <Hero />
       <About />
       <Specialties />

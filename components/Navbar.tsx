@@ -18,7 +18,7 @@ const navLinks = [
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const { cartCount, toggleCart } = useCart();
+    const { cartCount } = useCart();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -66,8 +66,8 @@ export default function Navbar() {
                         </Link>
                     ))}
 
-                    <button
-                        onClick={toggleCart}
+                    <Link
+                        href="/cart"
                         className="relative p-2 hover:text-primary transition-colors text-gray-800"
                         aria-label="Open shopping cart"
                     >
@@ -77,13 +77,13 @@ export default function Navbar() {
                                 {cartCount}
                             </span>
                         )}
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Mobile Menu Action Area */}
                 <div className="flex items-center gap-2 sm:gap-4 md:hidden">
-                    <button
-                        onClick={toggleCart}
+                    <Link
+                        href="/cart"
                         className="relative p-2 text-gray-800"
                         aria-label="Open shopping cart"
                     >
@@ -93,7 +93,7 @@ export default function Navbar() {
                                 {cartCount}
                             </span>
                         )}
-                    </button>
+                    </Link>
 
                     <button
                         className="p-2 text-2xl transition-colors text-gray-800 hover:text-primary"

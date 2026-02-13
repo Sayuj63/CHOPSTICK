@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CategoryCircles from "@/components/menu/CategoryCircles";
 import MenuGrid from "@/components/menu/MenuGrid";
-import CartSidebar from "@/components/CartSidebar";
+
 import SearchBar from "@/components/menu/SearchBar";
 
 export default function MenuPage() {
@@ -16,7 +16,7 @@ export default function MenuPage() {
     return (
         <main className="min-h-screen bg-cream">
             <Navbar />
-            <CartSidebar />
+
 
             <div className="pt-32 sm:pt-36 md:pt-40">
                 <SearchBar onSearchChange={setSearchQuery} searchQuery={searchQuery} resultsCount={resultsCount} />
