@@ -22,6 +22,11 @@ export default function CartPage() {
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
 
+    // Address Details
+    const [flatNo, setFlatNo] = useState("");
+    const [area, setArea] = useState("");
+    const [landmark, setLandmark] = useState("");
+
     // Location & Delivery
     const [distance, setDistance] = useState<string>("");
     const [isLocating, setIsLocating] = useState(false);
@@ -78,7 +83,14 @@ export default function CartPage() {
     const generateWhatsAppLink = () => {
         let message = `*New Order from ${name}*\n`;
         message += `Phone: ${phone}\n`;
-        message += `Email: ${email}\n\n`;
+        if (email) message += `Email: ${email}\n`;
+
+        message += `\n*Delivery Address:*\n`;
+        message += `${flatNo}\n`;
+        message += `${area}\n`;
+        if (landmark) message += `Landmark: ${landmark}\n`;
+        message += `(Distance: ${distance} km)\n\n`;
+
         message += `*Order Details:*\n`;
 
         cart.forEach((item) => {
@@ -86,7 +98,7 @@ export default function CartPage() {
         });
 
         message += `\n*Subtotal: ₹${cartTotal}*`;
-        message += `\n*Delivery Charge (${distance || 0} km): ₹${deliveryCharge}*`;
+        message += `\n*Delivery Charge: ₹${deliveryCharge}*`;
         const total = cartTotal + deliveryCharge;
         message += `\n*Total Amount: ₹${total}*`;
 
@@ -98,7 +110,7 @@ export default function CartPage() {
         return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
     };
 
-    const isFormValid = name && phone && distance && !locationError && cart.length > 0;
+    const isFormValid = name && phone && flatNo && area && distance && !locationError && cart.length > 0;
 
     return (
         <main className="min-h-screen bg-cream flex flex-col">
@@ -209,9 +221,49 @@ export default function CartPage() {
                                         />
                                     </div>
 
+                                    {/* Address Details */}
+                                    <div className="pt-2 border-t border-gray-100 mt-4">
+                                        <h3 className="text-md font-bold text-accent mb-3">Delivery Address</h3>
+                                        <div className="space-y-3">
+                                            <div>
+                                                <label htmlFor="flatNo" className="block text-sm font-medium text-gray-700 mb-1">Flat / House No / Floor / Building <span className="text-red-500">*</span></label>
+                                                <input
+                                                    type="text"
+                                                    id="flatNo"
+                                                    value={flatNo}
+                                                    onChange={(e) => setFlatNo(e.target.value)}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                                    placeholder="e.g. Flat 402, Sunshine Apts"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-1">Area / Sector / Locality <span className="text-red-500">*</span></label>
+                                                <input
+                                                    type="text"
+                                                    id="area"
+                                                    value={area}
+                                                    onChange={(e) => setArea(e.target.value)}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                                    placeholder="e.g. Viman Nagar"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="landmark" className="block text-sm font-medium text-gray-700 mb-1">Nearby Landmark <span className="text-gray-400 font-normal">(Optional)</span></label>
+                                                <input
+                                                    type="text"
+                                                    id="landmark"
+                                                    value={landmark}
+                                                    onChange={(e) => setLandmark(e.target.value)}
+                                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                                    placeholder="e.g. Near Datta Mandir"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     {/* Location */}
-                                    <div className="pt-2">
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Location</label>
+                                    <div className="pt-4 border-t border-gray-100 mt-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Delivery Distance <span className="text-red-500">*</span></label>
                                         <div className="flex gap-2 items-center">
                                             <button
                                                 onClick={handleLocateMe}
@@ -266,7 +318,9 @@ export default function CartPage() {
                                             e.preventDefault();
                                             if (!name) alert("Please enter your name.");
                                             else if (!phone) alert("Please enter your phone number.");
-                                            else if (!distance) alert("Please locate your delivery address.");
+                                            else if (!flatNo) alert("Please enter your Flat / House number.");
+                                            else if (!area) alert("Please enter your Area / Locality.");
+                                            else if (!distance) alert("Please locate your delivery address to calculate charges.");
                                         }
                                     }}
                                     className={`block w-full text-center font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 mt-4 text-white uppercase tracking-wider
