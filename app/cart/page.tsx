@@ -1,21 +1,22 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { FaTrash, FaPlus, FaMinus, FaMapMarkerAlt, FaWhatsapp } from "react-icons/fa";
-import { calculateDeliveryCharge, calculateDistance } from "@/utils/deliveryUtils";
+import { FaTrash, FaPlus, FaMinus, FaWhatsapp, FaShoppingBag } from "react-icons/fa";
+import { placeOrder } from "@/lib/orders";
 
-// Pune coordinates based on Footer location
-const RESTAURANT_COORDS = { lat: 18.572548, lng: 73.914478 };
 const WHATSAPP_NUMBER = "919607507443";
 
 export default function CartPage() {
-    const { cart, removeFromCart, updateQuantity, cartTotal } = useCart();
+    const router = useRouter();
+    const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } = useCart();
+    const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
     // User Details
     const [name, setName] = useState("");
@@ -27,59 +28,6 @@ export default function CartPage() {
     const [area, setArea] = useState("");
     const [landmark, setLandmark] = useState("");
 
-    // Location & Delivery
-    const [distance, setDistance] = useState<string>("");
-    const [isLocating, setIsLocating] = useState(false);
-    const [locationError, setLocationError] = useState("");
-    const [deliveryCharge, setDeliveryCharge] = useState(0);
-
-    useEffect(() => {
-        const dist = parseFloat(distance);
-        if (!isNaN(dist)) {
-            const charge = calculateDeliveryCharge(dist, cartTotal);
-            setDeliveryCharge(charge === -1 ? 0 : charge); // Handle out of range gracefully in UI
-        } else {
-            setDeliveryCharge(0);
-        }
-    }, [distance, cartTotal]);
-
-    const handleLocateMe = () => {
-        setIsLocating(true);
-        setLocationError("");
-
-        if (!navigator.geolocation) {
-            setLocationError("Geolocation is not supported by your browser.");
-            setIsLocating(false);
-            return;
-        }
-
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const userLat = position.coords.latitude;
-                const userLng = position.coords.longitude;
-                const distKm = calculateDistance(RESTAURANT_COORDS.lat, RESTAURANT_COORDS.lng, userLat, userLng);
-
-                // Adding a small buffer (1.2x) to account for road curvature vs straight line
-                const roadDistanceEst = (distKm * 1.2).toFixed(1);
-
-                setDistance(roadDistanceEst);
-                setIsLocating(false);
-            },
-            (error) => {
-                console.error("Error fetching location:", error);
-                let errorMessage = "Unable to retrieve location.";
-                if (error.code === error.PERMISSION_DENIED) {
-                    errorMessage = "Location permission denied. Please enable it in browser settings.";
-                } else if (error.code === error.TIMEOUT) {
-                    errorMessage = "Location request timed out.";
-                }
-                setLocationError(errorMessage);
-                setIsLocating(false);
-            },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-        );
-    };
-
     const generateWhatsAppLink = () => {
         let message = `*New Order from ${name}*\n`;
         message += `Phone: ${phone}\n`;
@@ -89,21 +37,14 @@ export default function CartPage() {
         message += `${flatNo}\n`;
         message += `${area}\n`;
         if (landmark) message += `Landmark: ${landmark}\n`;
-        message += `(Distance: ${distance} km)\n\n`;
 
-        message += `*Order Details:*\n`;
+        message += `\n*Order Details:*\n`;
 
         cart.forEach((item) => {
             message += `- ${item.name} x ${item.quantity} = ₹${item.price * item.quantity}\n`;
         });
 
-        message += `\n*Subtotal: ₹${cartTotal}*`;
-        message += `\n*Delivery Charge: ₹${deliveryCharge}*`;
-        const total = cartTotal + deliveryCharge;
-        message += `\n*Total Amount: ₹${total}*`;
-
-
-
+        message += `\n*Total Amount: ₹${cartTotal}*`;
         message += `\n\nPlease confirm my order.`;
 
         const encodedMessage = encodeURIComponent(message);
@@ -120,7 +61,60 @@ export default function CartPage() {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
     };
 
-    const isFormValid = name && isValidPhone(phone) && isValidEmail(email) && flatNo && area && distance && !locationError && cart.length > 0;
+    const isFormValid = name && isValidPhone(phone) && isValidEmail(email) && flatNo && area && cart.length > 0;
+
+    const handlePlaceOrder = async () => {
+        if (!isFormValid) {
+            if (!name) alert("Please enter your name.");
+            else if (!phone) alert("Please enter your phone number.");
+            else if (!isValidPhone(phone)) alert("Please enter a valid 10-digit phone number.");
+            else if (!isValidEmail(email)) alert("Please enter a valid email address.");
+            else if (!flatNo) alert("Please enter your Flat / House number.");
+            else if (!area) alert("Please enter your Area / Locality.");
+            return;
+        }
+
+        setIsPlacingOrder(true);
+        try {
+            const orderId = await placeOrder({
+                customerName: name,
+                customerPhone: phone.replace(/\D/g, ''),
+                customerEmail: email || undefined,
+                items: cart.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    image: item.image,
+                })),
+                subtotal: cartTotal,
+                deliveryCharge: 0,
+                total: cartTotal,
+                address: {
+                    flatNo,
+                    area,
+                    landmark: landmark || undefined,
+                    distance: "",
+                },
+            });
+
+            // Save order ID to localStorage for tracking
+            const existingIds = JSON.parse(localStorage.getItem('chopstick-order-ids') || '[]');
+            existingIds.unshift(orderId);
+            localStorage.setItem('chopstick-order-ids', JSON.stringify(existingIds));
+
+            // Save customer info for future orders
+            localStorage.setItem('chopstick-customer', JSON.stringify({ name, phone, email }));
+
+            clearCart();
+            router.push('/orders');
+        } catch (error) {
+            console.error('Error placing order:', error);
+            alert('Failed to place order. Please try again.');
+        } finally {
+            setIsPlacingOrder(false);
+        }
+    };
 
     return (
         <main className="min-h-screen bg-cream flex flex-col">
@@ -198,7 +192,7 @@ export default function CartPage() {
 
                                 <div className="space-y-4">
                                     <div>
-                                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Name <span className="text-red-500">*</span></label>
                                         <input
                                             type="text"
                                             id="name"
@@ -209,7 +203,7 @@ export default function CartPage() {
                                         />
                                     </div>
                                     <div>
-                                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number <span className="text-red-500">*</span></label>
                                         <input
                                             type="tel"
                                             id="phone"
@@ -270,33 +264,6 @@ export default function CartPage() {
                                             </div>
                                         </div>
                                     </div>
-
-                                    {/* Location */}
-                                    <div className="pt-4 border-t border-gray-100 mt-2">
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Delivery Distance <span className="text-red-500">*</span></label>
-                                        <div className="flex gap-2 items-center">
-                                            <button
-                                                onClick={handleLocateMe}
-                                                disabled={isLocating}
-                                                className="flex-1 bg-blue-50 text-blue-600 px-4 py-3 rounded-lg font-bold hover:bg-blue-100 transition-colors flex items-center justify-center gap-2 border border-blue-200"
-                                            >
-                                                {isLocating ? (
-                                                    <span className="animate-spin w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full"></span>
-                                                ) : (
-                                                    <FaMapMarkerAlt />
-                                                )}
-                                                {isLocating ? "Locating..." : (distance ? `Location Found (${distance} km)` : "Locate Me")}
-                                            </button>
-                                        </div>
-                                        {locationError && (
-                                            <p className="text-xs text-red-500 mt-2">{locationError}</p>
-                                        )}
-                                        {distance && !locationError && (
-                                            <p className="text-xs text-green-600 mt-2 font-medium">
-                                                {deliveryCharge === 0 ? "Free Delivery! 🎉" : `Distance: ${distance} km`}
-                                            </p>
-                                        )}
-                                    </div>
                                 </div>
                             </div>
 
@@ -305,47 +272,55 @@ export default function CartPage() {
                                 <h2 className="text-xl font-bold text-accent border-b pb-4">Order Summary</h2>
 
                                 <div className="space-y-2 text-sm text-gray-600">
-                                    <div className="flex justify-between">
-                                        <span>Subtotal</span>
-                                        <span>₹{cartTotal}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span>Delivery Charges</span>
-                                        <span>{distance ? `₹${deliveryCharge}` : '--'}</span>
-                                    </div>
+                                    {cart.map((item) => (
+                                        <div key={item.id} className="flex justify-between">
+                                            <span>{item.name} × {item.quantity}</span>
+                                            <span>₹{item.price * item.quantity}</span>
+                                        </div>
+                                    ))}
                                 </div>
                                 <div className="flex justify-between items-center text-xl font-bold text-accent pt-4 border-t border-gray-100">
                                     <span>Total</span>
-                                    <span>₹{cartTotal + deliveryCharge}</span>
+                                    <span>₹{cartTotal}</span>
+                                </div>
+
+                                {/* Place Order Button */}
+                                <button
+                                    onClick={handlePlaceOrder}
+                                    disabled={isPlacingOrder}
+                                    className={`w-full font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 mt-4 text-white uppercase tracking-wider
+                                        ${isFormValid && !isPlacingOrder
+                                            ? 'bg-primary hover:bg-accent cursor-pointer transform hover:-translate-y-1'
+                                            : 'bg-gray-300 cursor-not-allowed'}`}
+                                >
+                                    {isPlacingOrder ? (
+                                        <><span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span> Placing Order...</>
+                                    ) : (
+                                        <><FaShoppingBag className="text-lg" /> Place Order</>
+                                    )}
+                                </button>
+                                <p className="text-center text-xs text-gray-400">
+                                    Your order will be sent to the restaurant for confirmation.
+                                </p>
+
+                                <div className="relative my-4">
+                                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200"></div></div>
+                                    <div className="relative flex justify-center"><span className="bg-white px-3 text-xs text-gray-400">or</span></div>
                                 </div>
 
                                 <a
                                     href={isFormValid ? generateWhatsAppLink() : undefined}
                                     target={isFormValid ? "_blank" : undefined}
                                     rel="noreferrer"
-                                    onClick={(e) => {
-                                        if (!isFormValid) {
-                                            e.preventDefault();
-                                            if (!name) alert("Please enter your name.");
-                                            else if (!phone) alert("Please enter your phone number.");
-                                            else if (!isValidPhone(phone)) alert("Please enter a valid 10-digit phone number.");
-                                            else if (!isValidEmail(email)) alert("Please enter a valid email address.");
-                                            else if (!flatNo) alert("Please enter your Flat / House number.");
-                                            else if (!area) alert("Please enter your Area / Locality.");
-                                            else if (!distance) alert("Please locate your delivery address to calculate charges.");
-                                        }
-                                    }}
-                                    className={`block w-full text-center font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 mt-4 text-white uppercase tracking-wider
+                                    onClick={(e) => { if (!isFormValid) e.preventDefault(); }}
+                                    className={`block w-full text-center font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-sm
                                         ${isFormValid
-                                            ? 'bg-[#25D366] hover:bg-[#128C7E] cursor-pointer transform hover:-translate-y-1'
-                                            : 'bg-gray-300 cursor-not-allowed'}`}
+                                            ? 'bg-[#25D366] text-white hover:bg-[#128C7E] cursor-pointer'
+                                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
                                 >
-                                    <FaWhatsapp className="text-xl" />
-                                    Place Order on WhatsApp
+                                    <FaWhatsapp className="text-lg" />
+                                    Order via WhatsApp
                                 </a>
-                                <p className="text-center text-xs text-gray-400">
-                                    You'll be redirected to WhatsApp to confirm your order.
-                                </p>
                             </div>
                         </div>
                     </div>

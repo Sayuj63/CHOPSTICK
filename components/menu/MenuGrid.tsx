@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaPlus, FaMinus, FaLeaf } from "react-icons/fa";
+import { FaPlus, FaMinus } from "react-icons/fa";
 import { useCart } from "@/context/CartContext";
 
 const categoryImages: Record<string, string> = {
@@ -17,12 +17,10 @@ const categoryImages: Record<string, string> = {
     "default": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2670"
 };
 
-// Function to process menu data into products
 function processMenuData(menuData: any): any[] {
     const products: any[] = [];
     let itemIdCounter = 1;
 
-    // New menu structure is an array of categories
     menuData.menu.forEach((categoryData: any) => {
         const categoryName = categoryData.category.toLowerCase();
         const categoryId = categoryData.category.toLowerCase().replace(/\s+/g, '-');
@@ -30,27 +28,22 @@ function processMenuData(menuData: any): any[] {
         const itemType = categoryData.type.toLowerCase();
 
         categoryData.items.forEach((item: any) => {
-            const categories = ["all", categoryId]; // Add specific category ID
+            const categories = ["all", categoryId];
 
-            // Also add grouped categories for backwards compatibility
-            // Map cuisines to categories
             if (cuisineType.includes("chinese")) categories.push("chinese");
             if (cuisineType.includes("kerala")) categories.push("kerala");
             if (cuisineType.includes("indian")) categories.push("indian");
             if (cuisineType.includes("chettinad")) categories.push("indian");
             if (cuisineType.includes("tandoor")) categories.push("tandoori");
 
-            // Map sections to types
             if (categoryName.includes("appetizer") || categoryName.includes("starter")) {
                 categories.push("starters");
             }
-
             if (categoryName.includes("main course") || categoryName.includes("curry") ||
                 categoryName.includes("curries") || categoryName.includes("dishes") ||
                 categoryName.includes("meals") || categoryName.includes("thali")) {
                 categories.push("main-course");
             }
-
             if (categoryName.includes("rice") || categoryName.includes("noodles") ||
                 categoryName.includes("bread") || categoryName.includes("paratha") ||
                 categoryName.includes("biryani") || categoryName.includes("pulav") ||
@@ -58,7 +51,6 @@ function processMenuData(menuData: any): any[] {
                 categories.push("rice-breads");
             }
 
-            // Veg check
             const isVeg = itemType.includes("vegetarian") ||
                 categoryName.includes("veg") ||
                 item.name.toLowerCase().includes("veg") ||
@@ -68,7 +60,6 @@ function processMenuData(menuData: any): any[] {
                 item.name.toLowerCase().includes("gobi") ||
                 item.name.toLowerCase().includes("aloo");
 
-            // Handle pricing - prefer full price, then regular price, then half price
             const displayPrice = item.price || item.full || item.half || 0;
 
             products.push({
@@ -78,7 +69,7 @@ function processMenuData(menuData: any): any[] {
                 priceHalf: item.half,
                 priceFull: item.full,
                 categories: categories,
-                categoryName: categoryData.category, // Store full category name
+                categoryName: categoryData.category,
                 veg: isVeg,
                 image: categoryImages[categories[1]] || categoryImages["default"]
             });
@@ -88,20 +79,12 @@ function processMenuData(menuData: any): any[] {
     return products;
 }
 
-// Levenshtein distance algorithm for fuzzy matching
 function levenshteinDistance(str1: string, str2: string): number {
     const len1 = str1.length;
     const len2 = str2.length;
     const matrix: number[][] = [];
-
-    for (let i = 0; i <= len1; i++) {
-        matrix[i] = [i];
-    }
-
-    for (let j = 0; j <= len2; j++) {
-        matrix[0][j] = j;
-    }
-
+    for (let i = 0; i <= len1; i++) matrix[i] = [i];
+    for (let j = 0; j <= len2; j++) matrix[0][j] = j;
     for (let i = 1; i <= len1; i++) {
         for (let j = 1; j <= len2; j++) {
             const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
@@ -112,65 +95,56 @@ function levenshteinDistance(str1: string, str2: string): number {
             );
         }
     }
-
     return matrix[len1][len2];
 }
 
-// Calculate relevance score for search
 function calculateRelevance(itemName: string, searchQuery: string): number {
     const itemLower = itemName.toLowerCase();
     const queryLower = searchQuery.toLowerCase();
-
-    // Exact match gets highest score
     if (itemLower === queryLower) return 1000;
-
-    // Starts with query gets high score
     if (itemLower.startsWith(queryLower)) return 500;
-
-    // Contains query gets medium score
     if (itemLower.includes(queryLower)) return 300;
-
-    // Use Levenshtein distance for fuzzy matching
     const distance = levenshteinDistance(itemLower, queryLower);
     const maxLength = Math.max(itemLower.length, queryLower.length);
     const similarity = 1 - distance / maxLength;
-
-    // Only consider items with similarity > 0.4 (60% different or less)
-    if (similarity > 0.4) {
-        return similarity * 100;
-    }
-
-    // Check if any word in the item name matches
+    if (similarity > 0.4) return similarity * 100;
     const itemWords = itemLower.split(/\s+/);
     const queryWords = queryLower.split(/\s+/);
-
     for (const queryWord of queryWords) {
         for (const itemWord of itemWords) {
             if (itemWord.startsWith(queryWord)) return 200;
             if (itemWord.includes(queryWord)) return 150;
-
             const wordDistance = levenshteinDistance(itemWord, queryWord);
             const wordSimilarity = 1 - wordDistance / Math.max(itemWord.length, queryWord.length);
-            if (wordSimilarity > 0.6) {
-                return wordSimilarity * 100;
-            }
+            if (wordSimilarity > 0.6) return wordSimilarity * 100;
         }
     }
-
     return 0;
 }
 
-export default function MenuGrid({ selectedCategory, searchQuery = "", onResultsChange }: {
+// Group products by categoryName
+function groupByCategory(products: any[]): { name: string; items: any[] }[] {
+    const map = new Map<string, any[]>();
+    for (const p of products) {
+        const key = p.categoryName;
+        if (!map.has(key)) map.set(key, []);
+        map.get(key)!.push(p);
+    }
+    return Array.from(map.entries()).map(([name, items]) => ({ name, items }));
+}
+
+export default function MenuGrid({ selectedCategory, selectedFilter = "all", searchQuery = "", onResultsChange }: {
     selectedCategory: string;
+    selectedFilter?: string;
     searchQuery?: string;
     onResultsChange?: (count: number) => void;
 }) {
     const { addToCart, cart, updateQuantity } = useCart();
     const [products, setProducts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
 
     useEffect(() => {
-        // Fetch menu data from public folder
         fetch('/Menu.json')
             .then(response => response.json())
             .then(data => {
@@ -184,32 +158,33 @@ export default function MenuGrid({ selectedCategory, searchQuery = "", onResults
             });
     }, []);
 
-    // Use useMemo for filtered products to fix hooks ordering
     const filteredProducts = useMemo(() => {
         let results: any[] = [];
 
-        // PRIORITY 1: Global Search (searches ALL products regardless of category)
         if (searchQuery.trim()) {
             const productsWithRelevance = products.map((product: any) => ({
                 ...product,
                 relevance: calculateRelevance(product.name, searchQuery)
             }));
-
             results = productsWithRelevance
                 .filter((p: any) => p.relevance > 0)
                 .sort((a: any, b: any) => b.relevance - a.relevance);
-        }
-        // PRIORITY 2: Category Filtering (only when NO search is active)
-        else {
+        } else {
             results = selectedCategory === "all"
                 ? products
                 : products.filter((p: any) => p.categories.includes(selectedCategory));
         }
 
-        return results;
-    }, [products, searchQuery, selectedCategory]);
+        // Apply dietary filter
+        if (selectedFilter === "veg") {
+            results = results.filter((p: any) => p.veg);
+        } else if (selectedFilter === "non-veg") {
+            results = results.filter((p: any) => !p.veg);
+        }
 
-    // Notify parent component of results count when searching
+        return results;
+    }, [products, searchQuery, selectedCategory, selectedFilter]);
+
     useEffect(() => {
         if (searchQuery.trim() && onResultsChange) {
             onResultsChange(filteredProducts.length);
@@ -217,6 +192,15 @@ export default function MenuGrid({ selectedCategory, searchQuery = "", onResults
             onResultsChange(undefined as any);
         }
     }, [filteredProducts.length, searchQuery, onResultsChange]);
+
+    const toggleSection = (name: string) => {
+        setCollapsedSections(prev => {
+            const next = new Set(prev);
+            if (next.has(name)) next.delete(name);
+            else next.add(name);
+            return next;
+        });
+    };
 
     if (loading) {
         return (
@@ -226,84 +210,218 @@ export default function MenuGrid({ selectedCategory, searchQuery = "", onResults
         );
     }
 
+    const grouped = groupByCategory(filteredProducts);
 
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-6 md:gap-8 pb-24">
-            <AnimatePresence mode="popLayout">
-                {filteredProducts.map((product) => (
-                    <motion.div
-                        layout
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        key={product.id}
-                        className="group bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full"
-                    >
-                        <div className="relative aspect-[4/3] w-full overflow-hidden">
-                            <Image
-                                src={product.image}
-                                alt={product.name}
-                                fill
-                                sizes="(max-width: 480px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                                className="object-cover transition-transform duration-700 group-hover:scale-110"
-                            />
-                            <div className="absolute top-1 left-1 sm:top-3 sm:left-3 flex gap-1">
-                                <div className={`w-3 h-3 sm:w-5 sm:h-5 rounded-sm bg-white/90 backdrop-blur-sm border flex items-center justify-center p-[2px] shadow-sm ${product.veg ? "border-green-600" : "border-red-600"}`}>
-                                    <div className={`w-full h-full rounded-full ${product.veg ? "bg-green-600" : "bg-red-600"}`} />
-                                </div>
+        <div className="pb-32">
+            {grouped.map((group) => {
+                const isCollapsed = collapsedSections.has(group.name);
+
+                return (
+                    <section key={group.name} className="mt-2">
+                        {/* Section Header */}
+                        <button
+                            onClick={() => toggleSection(group.name)}
+                            className="w-full px-4 sm:px-0 flex items-center justify-between py-4 cursor-pointer"
+                        >
+                            <h2 className="text-lg sm:text-xl font-bold text-accent">{group.name}</h2>
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm text-gray-500">{group.items.length} items</span>
+                                <motion.svg
+                                    animate={{ rotate: isCollapsed ? 180 : 0 }}
+                                    transition={{ duration: 0.2 }}
+                                    xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                >
+                                    <polyline points="18 15 12 9 6 15" />
+                                </motion.svg>
                             </div>
-                        </div>
+                        </button>
 
-                        <div className="p-2 sm:p-5 flex flex-col flex-1">
-                            <div className="mb-2 sm:mb-4">
-                                <h3 className="font-bold text-accent text-[11px] sm:text-base md:text-lg mb-0.5 group-hover:text-secondary transition-colors line-clamp-1">{product.name}</h3>
-                                <p className="hidden sm:block text-gray-400 text-[10px] sm:text-xs font-light leading-relaxed line-clamp-2">Authentic preparation with fresh ingredients.</p>
-                            </div>
+                        {/* Items */}
+                        <AnimatePresence>
+                            {!isCollapsed && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="overflow-hidden"
+                                >
+                                    {group.items.map((product, idx) => {
+                                        const cartItem = cart.find(item => item.id === product.id);
+                                        const quantity = cartItem ? cartItem.quantity : 0;
 
-                            <div className="mt-auto flex justify-between items-center sm:pt-4 sm:border-t sm:border-gray-50">
-                                <span className="font-extrabold text-[12px] sm:text-lg md:text-xl text-accent">₹{product.price}</span>
-                                {(() => {
-                                    const cartItem = cart.find(item => item.id === product.id);
-                                    const quantity = cartItem ? cartItem.quantity : 0;
-
-                                    if (quantity === 0) {
                                         return (
-                                            <motion.button
-                                                whileTap={{ scale: 0.9 }}
-                                                onClick={() => addToCart({ id: product.id, name: product.name, price: product.price, image: product.image })}
-                                                className="p-1 sm:px-4 sm:py-2 bg-white text-primary border border-gray-200 font-bold uppercase text-[9px] sm:text-xs rounded-lg shadow-sm hover:shadow-md hover:border-primary transition-all duration-300 flex items-center justify-center min-w-[70px] sm:min-w-[90px]"
+                                            <div
+                                                key={product.id}
+                                                className={`px-4 sm:px-0 pb-8 mb-4 ${idx < group.items.length - 1
+                                                    ? "border-b border-dashed border-gray-200"
+                                                    : ""
+                                                    }`}
                                             >
-                                                <span className="sm:hidden flex items-center justify-center"><FaPlus size={10} className="mr-1" /> ADD</span>
-                                                <span className="hidden sm:inline flex items-center gap-1">ADD</span>
-                                            </motion.button>
-                                        );
-                                    } else {
-                                        return (
-                                            <div className="flex items-center bg-primary text-secondary rounded-lg overflow-hidden shadow-md h-7 sm:h-9 min-w-[70px] sm:min-w-[90px]">
-                                                <motion.button
-                                                    whileTap={{ scale: 0.9 }}
-                                                    onClick={() => updateQuantity(product.id, quantity - 1)}
-                                                    className="w-7 sm:w-9 h-full flex items-center justify-center bg-primary hover:bg-opacity-90 transition-colors"
-                                                >
-                                                    <FaMinus size={8} />
-                                                </motion.button>
-                                                <span className="flex-1 text-center font-bold text-[10px] sm:text-xs bg-primary text-menu-text">{quantity}</span>
-                                                <motion.button
-                                                    whileTap={{ scale: 0.9 }}
-                                                    onClick={() => updateQuantity(product.id, quantity + 1)}
-                                                    className="w-7 sm:w-9 h-full flex items-center justify-center bg-primary hover:bg-opacity-90 transition-colors"
-                                                >
-                                                    <FaPlus size={8} />
-                                                </motion.button>
+                                                <div className="flex gap-4">
+                                                    {/* Left: Info */}
+                                                    <div className="flex-1 min-w-0">
+                                                        {/* Veg/Non-veg indicator */}
+                                                        <div className="mb-1.5">
+                                                            <span className={`inline-flex w-4 h-4 border items-center justify-center p-0.5 ${product.veg ? "border-green-600" : "border-red-600"
+                                                                }`}>
+                                                                <span className={`w-1.5 h-1.5 rounded-full ${product.veg ? "bg-green-600" : "bg-red-600"
+                                                                    }`}></span>
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Name */}
+                                                        <h3 className="text-base sm:text-lg font-bold text-accent leading-tight mb-1">
+                                                            {product.name}
+                                                        </h3>
+
+                                                        {/* Price */}
+                                                        <p className="font-semibold text-accent mb-2">
+                                                            ₹{product.price}
+                                                        </p>
+
+                                                        {/* Description */}
+                                                        <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">
+                                                            Authentic preparation with fresh ingredients and traditional spices.
+                                                        </p>
+                                                    </div>
+
+                                                    {/* Right: Image + ADD button */}
+                                                    <div className="relative w-28 h-28 sm:w-36 sm:h-36 flex-shrink-0">
+                                                        <Image
+                                                            src={product.image}
+                                                            alt={product.name}
+                                                            fill
+                                                            sizes="(max-width: 640px) 112px, 144px"
+                                                            className="object-cover rounded-2xl shadow-sm"
+                                                        />
+
+                                                        {/* ADD / Quantity Button */}
+                                                        <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 z-10">
+                                                            {quantity === 0 ? (
+                                                                <motion.button
+                                                                    whileTap={{ scale: 0.9 }}
+                                                                    onClick={() => addToCart({
+                                                                        id: product.id,
+                                                                        name: product.name,
+                                                                        price: product.price,
+                                                                        image: product.image
+                                                                    })}
+                                                                    className="bg-white border border-primary/20 shadow-md text-primary font-bold px-6 sm:px-8 py-1.5 sm:py-2 rounded-lg text-sm relative cursor-pointer hover:shadow-lg transition-shadow"
+                                                                >
+                                                                    ADD
+                                                                    <span className="absolute top-0.5 right-1.5 text-primary/60 text-[10px]">+</span>
+                                                                </motion.button>
+                                                            ) : (
+                                                                <div className="bg-white border border-primary/20 shadow-md rounded-lg flex items-center overflow-hidden">
+                                                                    <motion.button
+                                                                        whileTap={{ scale: 0.9 }}
+                                                                        onClick={() => updateQuantity(product.id, quantity - 1)}
+                                                                        className="px-2.5 py-1.5 text-primary font-bold text-sm hover:bg-primary/5 transition-colors cursor-pointer"
+                                                                    >
+                                                                        <FaMinus size={10} />
+                                                                    </motion.button>
+                                                                    <span className="px-3 py-1.5 text-primary font-bold text-sm min-w-[28px] text-center">
+                                                                        {quantity}
+                                                                    </span>
+                                                                    <motion.button
+                                                                        whileTap={{ scale: 0.9 }}
+                                                                        onClick={() => updateQuantity(product.id, quantity + 1)}
+                                                                        className="px-2.5 py-1.5 text-primary font-bold text-sm hover:bg-primary/5 transition-colors cursor-pointer"
+                                                                    >
+                                                                        <FaPlus size={10} />
+                                                                    </motion.button>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         );
-                                    }
-                                })()}
-                            </div>
-                        </div>
-                    </motion.div>
-                ))}
-            </AnimatePresence>
+                                    })}
+
+                                    {/* Recommended for you */}
+                                    {(() => {
+                                        const groupItemIds = new Set(group.items.map((i: any) => i.id));
+                                        const others = products.filter((p: any) => !groupItemIds.has(p.id));
+                                        const seed = group.name.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+                                        const shuffled = [...others].sort((a, b) => {
+                                            const ha = ((a.id.charCodeAt(a.id.length - 1) * seed) % 997);
+                                            const hb = ((b.id.charCodeAt(b.id.length - 1) * seed) % 997);
+                                            return ha - hb;
+                                        });
+                                        const recs = shuffled.slice(0, 4);
+                                        if (recs.length === 0) return null;
+
+                                        return (
+                                            <div className="mt-2 mb-4">
+                                                <div className="px-4 sm:px-0 py-3 mt-2 mb-2 bg-primary/5 border-l-4 border-primary rounded-r-lg">
+                                                    <h3 className="text-base font-bold text-primary">
+                                                        ✨ Recommended for you
+                                                    </h3>
+                                                </div>
+                                                {recs.map((rec: any, rIdx: number) => {
+                                                    const recCartItem = cart.find(item => item.id === rec.id);
+                                                    const recQty = recCartItem ? recCartItem.quantity : 0;
+
+                                                    return (
+                                                        <div
+                                                            key={rec.id}
+                                                            className={`px-4 sm:px-0 pb-8 mb-4 ${rIdx < recs.length - 1 ? "border-b border-dashed border-gray-200" : ""}`}
+                                                        >
+                                                            <div className="flex gap-4">
+                                                                <div className="flex-1 min-w-0">
+                                                                    <div className="mb-1.5">
+                                                                        <span className={`inline-flex w-4 h-4 border items-center justify-center p-0.5 ${rec.veg ? "border-green-600" : "border-red-600"}`}>
+                                                                            <span className={`w-1.5 h-1.5 rounded-full ${rec.veg ? "bg-green-600" : "bg-red-600"}`}></span>
+                                                                        </span>
+                                                                    </div>
+                                                                    <h3 className="text-base sm:text-lg font-bold text-accent leading-tight mb-1">{rec.name}</h3>
+                                                                    <p className="font-semibold text-accent mb-2">₹{rec.price}</p>
+                                                                    <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">Authentic preparation with fresh ingredients and traditional spices.</p>
+                                                                </div>
+                                                                <div className="relative w-28 h-28 sm:w-36 sm:h-36 flex-shrink-0">
+                                                                    <Image src={rec.image} alt={rec.name} fill sizes="(max-width: 640px) 112px, 144px" className="object-cover rounded-2xl shadow-sm" />
+                                                                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 z-10">
+                                                                        {recQty === 0 ? (
+                                                                            <motion.button
+                                                                                whileTap={{ scale: 0.9 }}
+                                                                                onClick={() => addToCart({ id: rec.id, name: rec.name, price: rec.price, image: rec.image })}
+                                                                                className="bg-white border border-primary/20 shadow-md text-primary font-bold px-6 sm:px-8 py-1.5 sm:py-2 rounded-lg text-sm relative cursor-pointer hover:shadow-lg transition-shadow"
+                                                                            >
+                                                                                ADD
+                                                                                <span className="absolute top-0.5 right-1.5 text-primary/60 text-[10px]">+</span>
+                                                                            </motion.button>
+                                                                        ) : (
+                                                                            <div className="bg-white border border-primary/20 shadow-md rounded-lg flex items-center overflow-hidden">
+                                                                                <motion.button whileTap={{ scale: 0.9 }} onClick={() => updateQuantity(rec.id, recQty - 1)} className="px-2.5 py-1.5 text-primary font-bold text-sm hover:bg-primary/5 transition-colors cursor-pointer"><FaMinus size={10} /></motion.button>
+                                                                                <span className="px-3 py-1.5 text-primary font-bold text-sm min-w-[28px] text-center">{recQty}</span>
+                                                                                <motion.button whileTap={{ scale: 0.9 }} onClick={() => updateQuantity(rec.id, recQty + 1)} className="px-2.5 py-1.5 text-primary font-bold text-sm hover:bg-primary/5 transition-colors cursor-pointer"><FaPlus size={10} /></motion.button>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        );
+                                    })()}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </section>
+                );
+            })}
+
+            {filteredProducts.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-20 text-gray-400">
+                    <p className="text-lg font-medium">No dishes found</p>
+                    <p className="text-sm mt-1">Try adjusting your filters or search</p>
+                </div>
+            )}
         </div>
     );
 }
